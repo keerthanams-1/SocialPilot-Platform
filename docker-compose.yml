@@ -1,0 +1,136 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: socialpilot_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: socialpilot
+      POSTGRES_PASSWORD: socialpilot_pass_secure_2026
+      POSTGRES_DB: socialpilot_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U socialpilot -d socialpilot_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo:6-jammy
+    container_name: socialpilot_mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    container_name: socialpilot_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: socialpilot_backend
+    restart: always
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=socialpilot
+      - POSTGRES_PASSWORD=socialpilot_pass_secure_2026
+      - POSTGRES_DB=socialpilot_db
+      - MONGODB_URL=mongodb://mongodb:27017
+      - MONGODB_DB_NAME=socialpilot_analytics
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=production_secret_key_must_be_set_in_env_vault_32bytes
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+      redis:
+        condition: service_healthy
+
+  celery_worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: socialpilot_celery_worker
+    restart: always
+    command: celery -A app.core.celery_app.celery_app worker --loglevel=info
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=socialpilot
+      - POSTGRES_PASSWORD=socialpilot_pass_secure_2026
+      - POSTGRES_DB=socialpilot_db
+      - MONGODB_URL=mongodb://mongodb:27017
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=production_secret_key_must_be_set_in_env_vault_32bytes
+    depends_on:
+      - backend
+      - redis
+
+  celery_beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: socialpilot_celery_beat
+    restart: always
+    command: celery -A app.core.celery_app.celery_app beat --loglevel=info
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=socialpilot
+      - POSTGRES_PASSWORD=socialpilot_pass_secure_2026
+      - POSTGRES_DB=socialpilot_db
+      - MONGODB_URL=mongodb://mongodb:27017
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=production_secret_key_must_be_set_in_env_vault_32bytes
+    depends_on:
+      - backend
+      - redis
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: socialpilot_frontend
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    container_name: socialpilot_nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend
+      - frontend
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  redis_data:

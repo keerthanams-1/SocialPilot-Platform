@@ -1,0 +1,30 @@
+# Environment files & Secrets
+.env
+*.env
+backend/.env
+
+# Python & Virtual Environment
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+ENV/
+backend/venv/
+backend/env/
+.pytest_cache/
+.coverage
+
+# Node.js & React Build Outputs
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+.npm/
+
+# IDE & Operating System Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
