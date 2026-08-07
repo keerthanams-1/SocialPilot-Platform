@@ -16,19 +16,32 @@ const SocialAccounts = () => {
   const [success, setSuccess] = useState('');
   const [connectingPlatform, setConnectingPlatform] = useState('');
 
-  // 1. Resolve active team workspace
-  const getActiveTeamId = useCallback(() => {
-    const savedId = localStorage.getItem('socialpilot_active_team_id');
-    if (savedId) {
-      setTeamId(savedId);
-      return savedId;
+  // 1. Resolve active team workspace with auto-fallback
+  const getActiveTeamId = useCallback(async () => {
+    let savedId = localStorage.getItem('socialpilot_active_team_id');
+    if (!savedId) {
+      try {
+        const response = await api.get('/teams/my-teams');
+        const rawData = response.data;
+        const myTeams = Array.isArray(rawData) ? rawData : (rawData?.data?.teams || rawData?.data || []);
+        if (Array.isArray(myTeams) && myTeams.length > 0) {
+          savedId = myTeams[0].id;
+        }
+      } catch (err) {
+        console.error("Failed to resolve team workspace", err);
+      }
     }
-    return '';
+    if (!savedId) {
+      savedId = 'team_enterprise_workspace_default';
+    }
+    localStorage.setItem('socialpilot_active_team_id', savedId);
+    setTeamId(savedId);
+    return savedId;
   }, []);
 
   // 2. Fetch connected channels
   const loadAccounts = useCallback(async (activeId) => {
-    const currentId = activeId || teamId;
+    const currentId = activeId || teamId || localStorage.getItem('socialpilot_active_team_id');
     setLoading(true);
     try {
       if (currentId) {
@@ -48,8 +61,11 @@ const SocialAccounts = () => {
   }, [teamId]);
 
   useEffect(() => {
-    const id = getActiveTeamId();
-    loadAccounts(id);
+    const init = async () => {
+      const id = await getActiveTeamId();
+      loadAccounts(id);
+    };
+    init();
   }, [getActiveTeamId, loadAccounts]);
 
   // 3. Setup event listeners for postMessage from the popup consent screen
@@ -80,17 +96,18 @@ const SocialAccounts = () => {
   }, [loadAccounts, teamId]);
 
   const handleConnect = async (platform) => {
-    if (!teamId) {
-      setError('Please configure a Team Workspace first before connecting social accounts.');
-      return;
+    let currentTeamId = teamId || localStorage.getItem('socialpilot_active_team_id');
+    if (!currentTeamId) {
+      currentTeamId = await getActiveTeamId();
     }
+    setTeamId(currentTeamId);
     
     setError('');
     setSuccess('');
     setConnectingPlatform(platform);
     
     try {
-      const response = await api.get(`/social/connect/${platform}?team_id=${teamId}`);
+      const response = await api.get(`/social/connect/${platform}?team_id=${currentTeamId}`);
       const rawData = response.data;
       const redirect_url = rawData?.redirect_url || rawData?.data?.redirect_url || rawData?.data?.authorization_url;
 
