@@ -142,6 +142,65 @@ const Dashboard = () => {
   }, []);
 
   const [dashboardMetrics, setDashboardMetrics] = useState(null);
+  const [simulationToast, setSimulationToast] = useState('');
+  const [isSimulating, setIsSimulating] = useState(false);
+
+  const handleRunSimulation = () => {
+    setIsSimulating(true);
+    const addedLikes = Math.floor(Math.random() * 300) + 120;
+    const addedComments = Math.floor(Math.random() * 45) + 15;
+    const addedShares = Math.floor(Math.random() * 60) + 20;
+    const addedViews = Math.floor(Math.random() * 4500) + 1800;
+
+    const platforms = ['linkedin', 'instagram', 'facebook', 'twitter', 'youtube'];
+    const simPlatform = platforms[Math.floor(Math.random() * platforms.length)];
+
+    const simPost = {
+      id: `sim_${Date.now()}`,
+      title: `⚡ Live Simulation: Multi-Channel Post #${Math.floor(Math.random() * 900) + 100} Dispatched`,
+      target_platform: simPlatform,
+      published_at: new Date().toISOString(),
+      status: 'published',
+      likes: addedLikes * 10,
+      comments: addedComments * 6,
+      shares: addedShares * 4,
+      views: addedViews * 12
+    };
+
+    setDashboardMetrics(prev => {
+      const base = prev || {};
+      const newRecent = [simPost, ...(base.recent_posts || [])].slice(0, 10);
+      return {
+        ...base,
+        total_submitted_posts: (base.total_submitted_posts || 28) + 1,
+        published_posts_count: (base.published_posts_count || 15) + 1,
+        total_likes: (base.total_likes || 42100) + addedLikes * 10,
+        total_comments: (base.total_comments || 5850) + addedComments * 6,
+        total_shares: (base.total_shares || 6850) + addedShares * 4,
+        total_views: (base.total_views || 485200) + addedViews * 12,
+        recent_posts: newRecent
+      };
+    });
+
+    const msg = `⚡ Simulation Active: Added +${(addedLikes * 10).toLocaleString()} Likes, +${(addedComments * 6).toLocaleString()} Comments & Dispatched 1 Live Post on ${simPlatform.toUpperCase()}!`;
+    setSimulationToast(msg);
+
+    setNotifications(prev => [
+      {
+        id: `notif_sim_${Date.now()}`,
+        title: '⚡ Live Traffic Simulation Stream',
+        message: `Engagement surge on ${simPlatform.toUpperCase()}: +${addedLikes * 10} Likes, +${addedViews * 12} Views.`,
+        type: 'success',
+        is_read: false,
+        created_at: new Date().toISOString()
+      },
+      ...(Array.isArray(prev) ? prev : [])
+    ]);
+
+    setTimeout(() => {
+      setIsSimulating(false);
+    }, 1200);
+  };
 
   // Content Creator Quick Compose Modal State
   const [showCreatorComposeModal, setShowCreatorComposeModal] = useState(false);
@@ -241,6 +300,24 @@ const Dashboard = () => {
           
           {/* Quick Action Navigation Bar */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            <button 
+              className="btn-secondary" 
+              onClick={handleRunSimulation} 
+              style={{ 
+                height: '36px', 
+                fontSize: '0.8rem', 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '6px', 
+                background: isSimulating ? 'rgba(16, 185, 129, 0.4)' : 'rgba(16, 185, 129, 0.18)', 
+                border: '1px solid #10b981', 
+                color: '#10b981',
+                fontWeight: 'bold',
+                boxShadow: isSimulating ? '0 0 12px rgba(16, 185, 129, 0.5)' : 'none'
+              }}
+            >
+              ⚡ {isSimulating ? 'Simulating Surge...' : 'Run Live Simulation'}
+            </button>
             <button className="btn-primary" onClick={() => setShowCreatorComposeModal(true)} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <FiPlusCircle size={15} /> Create New Post
             </button>
@@ -261,6 +338,32 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
+        
+        {/* SIMULATION TOAST NOTIFICATION BANNER */}
+        {simulationToast && (
+          <div style={{
+            padding: '12px 18px',
+            marginBottom: '20px',
+            borderRadius: '10px',
+            background: 'rgba(16, 185, 129, 0.15)',
+            border: '1px solid #10b981',
+            color: '#10b981',
+            fontSize: '0.85rem',
+            fontWeight: '600',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            animation: 'fadeIn 0.3s ease-in-out'
+          }}>
+            <span>{simulationToast}</span>
+            <button 
+              onClick={() => setSimulationToast('')}
+              style={{ background: 'none', border: 'none', color: '#10b981', cursor: 'pointer', fontWeight: 'bold' }}
+            >
+              ✕
+            </button>
+          </div>
+        )}
         
         {/* WIDGET 1: 9 KPI SUMMARY CARDS */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '14px', marginBottom: '24px' }}>
