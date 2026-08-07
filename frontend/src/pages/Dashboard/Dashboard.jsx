@@ -729,10 +729,10 @@ const Dashboard = () => {
             <FiBarChart2 style={{ color: 'var(--success)' }} /> Content Analytics & Engagement Trends
           </h4>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
-            {/* Chart 1: Platform Engagement Bar Breakdown */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+            {/* Chart 1: Platform-Wise Performance Chart */}
             <div>
-              <div style={{ fontSize: '0.84rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '10px' }}>Platform-Wise Engagement Distribution</div>
+              <div style={{ fontSize: '0.84rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '10px' }}>📊 1. Platform Performance Share</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {(metrics.platform_engagement || [
                   { platform: "Instagram", engagement: 35, likes: 19800 },
@@ -754,10 +754,10 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Chart 2: Weekly Activity Trend Bars */}
+            {/* Chart 2: Weekly Activity / Engagement Trend Chart */}
             <div>
-              <div style={{ fontSize: '0.84rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '10px' }}>Weekly Engagement Activity</div>
-              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '120px', gap: '8px', padding: '10px 0' }}>
+              <div style={{ fontSize: '0.84rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '10px' }}>📈 2. Weekly Engagement Trend</div>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '120px', gap: '6px', padding: '10px 0' }}>
                 {(metrics.weekly_activity || [
                   { day: "Mon", engagements: 3400 },
                   { day: "Tue", engagements: 4800 },
@@ -768,8 +768,49 @@ const Dashboard = () => {
                   { day: "Sun", engagements: 4250 }
                 ]).map(w => (
                   <div key={w.day} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-                    <div style={{ width: '100%', height: `${(w.engagements / 7000) * 100}%`, background: 'linear-gradient(180deg, var(--primary), var(--secondary))', borderRadius: '4px 4px 0 0' }}></div>
+                    <div style={{ width: '100%', height: `${(w.engagements / 7000) * 100}%`, background: 'linear-gradient(180deg, #6366f1, #a855f7)', borderRadius: '4px 4px 0 0' }}></div>
                     <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '6px' }}>{w.day}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Chart 3: Monthly Published Posts Chart */}
+            <div>
+              <div style={{ fontSize: '0.84rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '10px' }}>📅 3. Monthly Published Trend</div>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '120px', gap: '6px', padding: '10px 0' }}>
+                {(metrics.monthly_published_trend || [
+                  { month: "Mar", posts: 18 },
+                  { month: "Apr", posts: 22 },
+                  { month: "May", posts: 26 },
+                  { month: "Jun", posts: 31 },
+                  { month: "Jul", posts: 29 },
+                  { month: "Aug", posts: 34 }
+                ]).map(m => (
+                  <div key={m.month} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+                    <div style={{ width: '100%', height: `${(m.posts / 40) * 100}%`, background: 'linear-gradient(180deg, #10b981, #059669)', borderRadius: '4px 4px 0 0' }}></div>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '6px' }}>{m.month} ({m.posts})</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Chart 4: Likes & Comments Daily Trend Chart */}
+            <div>
+              <div style={{ fontSize: '0.84rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '10px' }}>👍 4. Daily Likes & Comments Growth</div>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', height: '120px', gap: '6px', padding: '10px 0' }}>
+                {(metrics.likes_trend || [
+                  { day: "Mon", likes: 3400 },
+                  { day: "Tue", likes: 4800 },
+                  { day: "Wed", likes: 4150 },
+                  { day: "Thu", likes: 6200 },
+                  { day: "Fri", likes: 5300 },
+                  { day: "Sat", likes: 3900 },
+                  { day: "Sun", likes: 4250 }
+                ]).map(l => (
+                  <div key={l.day} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
+                    <div style={{ width: '100%', height: `${(l.likes / 7000) * 100}%`, background: 'linear-gradient(180deg, #3b82f6, #06b6d4)', borderRadius: '4px 4px 0 0' }}></div>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '6px' }}>{l.day}</span>
                   </div>
                 ))}
               </div>
@@ -784,6 +825,8 @@ const Dashboard = () => {
 
   const renderContent = () => {
     switch (activeTab) {
+      case 'overview':
+        return renderRoleDashboard();
       case 'profile':
         return <Profile />;
       case 'team':
