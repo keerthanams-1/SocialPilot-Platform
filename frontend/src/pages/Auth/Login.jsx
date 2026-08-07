@@ -94,6 +94,43 @@ const Login = () => {
           </button>
         </form>
 
+        {/* 1-CLICK DEMO ROLE LOGIN SHORTCUTS */}
+        <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid var(--border-color)' }}>
+          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'block', textAlign: 'center', marginBottom: '12px', fontWeight: 'bold' }}>
+            ⚡ 1-CLICK QUICK DEMO LOGIN BY ROLE
+          </span>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            <button
+              type="button"
+              onClick={() => { setEmail('admin@socialpilot.com'); setPassword('admin123'); }}
+              style={{ padding: '8px 10px', fontSize: '0.74rem', borderRadius: '8px', border: '1px solid rgba(239, 68, 68, 0.4)', background: 'rgba(239, 68, 68, 0.12)', color: '#ef4444', fontWeight: 'bold', cursor: 'pointer', textAlign: 'left' }}
+            >
+              🛡️ Admin User
+            </button>
+            <button
+              type="button"
+              onClick={() => { setEmail('creator@socialpilot.com'); setPassword('creator123'); }}
+              style={{ padding: '8px 10px', fontSize: '0.74rem', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.4)', background: 'rgba(16, 185, 129, 0.12)', color: '#10b981', fontWeight: 'bold', cursor: 'pointer', textAlign: 'left' }}
+            >
+              ✍️ Content Creator
+            </button>
+            <button
+              type="button"
+              onClick={() => { setEmail('marketing@socialpilot.com'); setPassword('marketing123'); }}
+              style={{ padding: '8px 10px', fontSize: '0.74rem', borderRadius: '8px', border: '1px solid rgba(245, 158, 11, 0.4)', background: 'rgba(245, 158, 11, 0.12)', color: '#f59e0b', fontWeight: 'bold', cursor: 'pointer', textAlign: 'left' }}
+            >
+              📣 Marketing Spec
+            </button>
+            <button
+              type="button"
+              onClick={() => { setEmail('business@socialpilot.com'); setPassword('business123'); }}
+              style={{ padding: '8px 10px', fontSize: '0.74rem', borderRadius: '8px', border: '1px solid rgba(59, 130, 246, 0.4)', background: 'rgba(59, 130, 246, 0.12)', color: '#3b82f6', fontWeight: 'bold', cursor: 'pointer', textAlign: 'left' }}
+            >
+              🏢 Business User
+            </button>
+          </div>
+        </div>
+
         <div style={footerStyle}>
           <span style={footerTextStyle}>New to SocialPilot? </span>
           <Link to="/register" style={registerLinkStyle}>Create account</Link>

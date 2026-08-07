@@ -36615,7 +36615,51 @@
         onChange: (e) => setPassword(e.target.value),
         disabled: submitting
       }
-    ))), /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn-primary", type: "submit", style: buttonStyle, disabled: submitting }, submitting ? "Authenticating..." : "Sign In")), /* @__PURE__ */ import_react5.default.createElement("div", { style: footerStyle }, /* @__PURE__ */ import_react5.default.createElement("span", { style: footerTextStyle }, "New to SocialPilot? "), /* @__PURE__ */ import_react5.default.createElement(Link, { to: "/register", style: registerLinkStyle }, "Create account"))));
+    ))), /* @__PURE__ */ import_react5.default.createElement("button", { className: "btn-primary", type: "submit", style: buttonStyle, disabled: submitting }, submitting ? "Authenticating..." : "Sign In")), /* @__PURE__ */ import_react5.default.createElement("div", { style: { marginTop: "24px", paddingTop: "20px", borderTop: "1px solid var(--border-color)" } }, /* @__PURE__ */ import_react5.default.createElement("span", { style: { fontSize: "0.78rem", color: "var(--text-muted)", display: "block", textAlign: "center", marginBottom: "12px", fontWeight: "bold" } }, "\u26A1 1-CLICK QUICK DEMO LOGIN BY ROLE"), /* @__PURE__ */ import_react5.default.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" } }, /* @__PURE__ */ import_react5.default.createElement(
+      "button",
+      {
+        type: "button",
+        onClick: () => {
+          setEmail("admin@socialpilot.com");
+          setPassword("admin123");
+        },
+        style: { padding: "8px 10px", fontSize: "0.74rem", borderRadius: "8px", border: "1px solid rgba(239, 68, 68, 0.4)", background: "rgba(239, 68, 68, 0.12)", color: "#ef4444", fontWeight: "bold", cursor: "pointer", textAlign: "left" }
+      },
+      "\u{1F6E1}\uFE0F Admin User"
+    ), /* @__PURE__ */ import_react5.default.createElement(
+      "button",
+      {
+        type: "button",
+        onClick: () => {
+          setEmail("creator@socialpilot.com");
+          setPassword("creator123");
+        },
+        style: { padding: "8px 10px", fontSize: "0.74rem", borderRadius: "8px", border: "1px solid rgba(16, 185, 129, 0.4)", background: "rgba(16, 185, 129, 0.12)", color: "#10b981", fontWeight: "bold", cursor: "pointer", textAlign: "left" }
+      },
+      "\u270D\uFE0F Content Creator"
+    ), /* @__PURE__ */ import_react5.default.createElement(
+      "button",
+      {
+        type: "button",
+        onClick: () => {
+          setEmail("marketing@socialpilot.com");
+          setPassword("marketing123");
+        },
+        style: { padding: "8px 10px", fontSize: "0.74rem", borderRadius: "8px", border: "1px solid rgba(245, 158, 11, 0.4)", background: "rgba(245, 158, 11, 0.12)", color: "#f59e0b", fontWeight: "bold", cursor: "pointer", textAlign: "left" }
+      },
+      "\u{1F4E3} Marketing Spec"
+    ), /* @__PURE__ */ import_react5.default.createElement(
+      "button",
+      {
+        type: "button",
+        onClick: () => {
+          setEmail("business@socialpilot.com");
+          setPassword("business123");
+        },
+        style: { padding: "8px 10px", fontSize: "0.74rem", borderRadius: "8px", border: "1px solid rgba(59, 130, 246, 0.4)", background: "rgba(59, 130, 246, 0.12)", color: "#3b82f6", fontWeight: "bold", cursor: "pointer", textAlign: "left" }
+      },
+      "\u{1F3E2} Business User"
+    ))), /* @__PURE__ */ import_react5.default.createElement("div", { style: footerStyle }, /* @__PURE__ */ import_react5.default.createElement("span", { style: footerTextStyle }, "New to SocialPilot? "), /* @__PURE__ */ import_react5.default.createElement(Link, { to: "/register", style: registerLinkStyle }, "Create account"))));
   };
   var containerStyle = {
     display: "flex",
