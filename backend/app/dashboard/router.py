@@ -41,7 +41,7 @@ def get_business_dashboard(
 @router.get("/creator")
 def get_creator_dashboard(
     db: Session = Depends(get_db),
-    current_user: User = require_role(["Administrator", "Business User", "Content Creator"])
+    current_user: User = Depends(get_current_user)
 ):
     """Retrieve Content Creator Workspace Dashboard (Drafts, Schedules, Media, Personal Stats)."""
     dashboard_data = DashboardOrchestratorService.get_creator_dashboard(db, current_user.id)

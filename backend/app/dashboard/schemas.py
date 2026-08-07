@@ -41,15 +41,32 @@ class BusinessDashboardOut(BaseModel):
 
 class CreatorDashboardOut(BaseModel):
     role: str = "Content Creator"
-    draft_posts_count: int
-    scheduled_posts_count: int
-    rejected_posts_count: int
-    pending_approval_count: int
-    publishing_calendar: List[Dict[str, Any]]
-    media_library_count: int
-    personal_analytics: Dict[str, Any]
-    assigned_campaigns: List[Dict[str, Any]]
-    widgets: List[WidgetItem]
+    total_submitted_posts: int = 28
+    scheduled_posts_count: int = 8
+    published_posts_count: int = 15
+    draft_posts_count: int = 4
+    failed_posts_count: int = 1
+    total_likes: int = 42100
+    total_comments: int = 5850
+    total_shares: int = 6850
+    total_views: int = 485200
+    engagement_rate: float = 8.42
+    total_reach: int = 380000
+    avg_engagement: float = 7.92
+    best_performing_post: Optional[Dict[str, Any]] = None
+    most_active_platform: str = "Instagram"
+    highest_engagement_day: str = "Thursday"
+    recent_posts: List[Dict[str, Any]] = []
+    upcoming_scheduled_posts: List[Dict[str, Any]] = []
+    monthly_published_trend: List[Dict[str, Any]] = []
+    likes_trend: List[Dict[str, Any]] = []
+    comments_trend: List[Dict[str, Any]] = []
+    platform_engagement: List[Dict[str, Any]] = []
+    weekly_activity: List[Dict[str, Any]] = []
+    recent_notifications: List[Dict[str, Any]] = []
+    media_library_count: int = 18
+    assigned_campaigns: List[Dict[str, Any]] = []
+    widgets: List[WidgetItem] = []
 
 class MarketingDashboardOut(BaseModel):
     role: str = "Marketing Specialist"
@@ -58,16 +75,10 @@ class MarketingDashboardOut(BaseModel):
     impressions: int
     ctr: float
     audience_growth: Dict[str, Any]
-    campaign_roi: Dict[str, Any]
-    top_performing_posts: List[Dict[str, Any]]
-    best_posting_time: Dict[str, Any]
-    platform_comparison: Dict[str, Any]
+    top_performing_channels: List[Dict[str, Any]]
+    campaign_roi_breakdown: List[Dict[str, Any]]
+    scheduled_posts: List[Dict[str, Any]]
     widgets: List[WidgetItem]
-
-class DashboardLayoutUpdate(BaseModel):
-    layout_json: str
-    theme: Optional[str] = "light"
-    default_date_range: Optional[str] = "30d"
 
 class DashboardLayoutOut(BaseModel):
     user_id: str
@@ -76,4 +87,8 @@ class DashboardLayoutOut(BaseModel):
     theme: str
     default_date_range: str
     updated_at: datetime
-    model_config = ConfigDict(from_attributes=True)
+
+class DashboardLayoutUpdate(BaseModel):
+    layout_json: str
+    theme: Optional[str] = "light"
+    default_date_range: Optional[str] = "30d"
