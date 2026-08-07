@@ -3,9 +3,9 @@ import api from '../../services/api';
 import { 
   FiBarChart2, FiEye, FiMousePointer, FiThumbsUp, FiFileText, 
   FiAward, FiTrendingUp, FiActivity, FiGlobe, FiAlertCircle, FiDownload,
-  FiCalendar, FiUsers, FiShare2, FiMessageCircle, FiHeart, FiLayers, FiPrinter, FiCheckCircle
+  FiCalendar, FiUsers, FiShare2, FiMessageCircle, FiHeart, FiLayers, FiPrinter, FiCheckCircle,
+  FiFacebook, FiInstagram, FiLinkedin, FiTwitter, FiYoutube
 } from 'react-icons/fi';
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTwitter, FaYoutube } from 'react-icons/fa';
 
 const DEFAULT_ANALYTICS_DATA = {
   summary: {
@@ -87,7 +87,6 @@ const Analytics = () => {
   const [data, setData] = useState(null);
   const [teamId, setTeamId] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
   const [selectedMetric, setSelectedMetric] = useState('impressions'); // impressions, clicks, engagements
   const [timeframe, setTimeframe] = useState('30d'); // 7d, 30d, 90d, ytd
   const [csvDownloading, setCsvDownloading] = useState(false);
@@ -179,11 +178,11 @@ const Analytics = () => {
 
   const getPlatformIcon = (platform) => {
     switch (platform) {
-      case 'facebook': return <FaFacebookF style={{ color: '#1877f2' }} />;
-      case 'instagram': return <FaInstagram style={{ color: '#e1306c' }} />;
-      case 'linkedin': return <FaLinkedinIn style={{ color: '#0077b5' }} />;
-      case 'twitter': return <FaTwitter style={{ color: '#1da1f2' }} />;
-      case 'youtube': return <FaYoutube style={{ color: '#ff0000' }} />;
+      case 'facebook': return <FiFacebook style={{ color: '#1877f2' }} />;
+      case 'instagram': return <FiInstagram style={{ color: '#e1306c' }} />;
+      case 'linkedin': return <FiLinkedin style={{ color: '#0077b5' }} />;
+      case 'twitter': return <FiTwitter style={{ color: '#1da1f2' }} />;
+      case 'youtube': return <FiYoutube style={{ color: '#ff0000' }} />;
       default: return <FiGlobe />;
     }
   };
