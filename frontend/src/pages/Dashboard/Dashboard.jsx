@@ -142,6 +142,16 @@ const Dashboard = () => {
 
   const [dashboardMetrics, setDashboardMetrics] = useState(null);
 
+  // Content Creator Quick Compose Modal State
+  const [showCreatorComposeModal, setShowCreatorComposeModal] = useState(false);
+  const [composeCaption, setComposeCaption] = useState('');
+  const [composeMediaUrl, setComposeMediaUrl] = useState('');
+  const [composeScheduleTime, setComposeScheduleTime] = useState('');
+  const [composePlatforms, setComposePlatforms] = useState(['linkedin', 'facebook']);
+  const [composeSubmitting, setComposeSubmitting] = useState(false);
+  const [composeSuccess, setComposeSuccess] = useState('');
+  const [composeError, setComposeError] = useState('');
+
   const fetchDashboardMetrics = useCallback(async () => {
     const roleName = user?.role_name || user?.role?.name || 'Content Creator';
     let endpoint = '/dashboard/creator';
@@ -156,6 +166,50 @@ const Dashboard = () => {
       console.error("Failed to fetch dashboard metrics", err);
     }
   }, [user]);
+
+  const handleCreatorSubmitPost = async (scheduleType = 'scheduled') => {
+    if (!composeCaption.trim()) {
+      setComposeError('Please enter post content caption.');
+      return;
+    }
+
+    setComposeSubmitting(true);
+    setComposeError('');
+    setComposeSuccess('');
+
+    const activeTeamId = localStorage.getItem('socialpilot_active_team_id') || 'team_enterprise_workspace_default';
+    
+    try {
+      const scheduledIso = composeScheduleTime ? new Date(composeScheduleTime).toISOString() : new Date(Date.now() + 3600000).toISOString();
+      const payload = {
+        team_id: activeTeamId,
+        content_text: composeCaption.trim(),
+        media_urls: composeMediaUrl.trim() ? [composeMediaUrl.trim()] : [],
+        platform_targets: composePlatforms.length > 0 ? composePlatforms : ['linkedin', 'facebook'],
+        schedule_type: scheduleType,
+        scheduled_at: scheduleType !== 'draft' ? scheduledIso : null
+      };
+
+      await api.post('/posts', payload);
+      
+      const successMsg = scheduleType === 'draft' ? 'Draft post saved successfully!' : 'Post scheduled successfully!';
+      setComposeSuccess(successMsg);
+
+      // Reset form
+      setComposeCaption('');
+      setComposeMediaUrl('');
+      setShowCreatorComposeModal(false);
+
+      // RE-FETCH ALL DASHBOARD METRICS IN REAL-TIME WITHOUT PAGE REFRESH!
+      fetchDashboardMetrics();
+      fetchNotifications();
+    } catch (err) {
+      console.error('Failed to submit creator post', err);
+      setComposeError(err.response?.data?.detail || 'Failed to submit post. Please check inputs.');
+    } finally {
+      setComposeSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     fetchDashboardMetrics();
@@ -448,17 +502,20 @@ const Dashboard = () => {
           
           {/* Quick Action Navigation Bar */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-            <button className="btn-primary" onClick={() => { setActiveTab('scheduler'); setSchedulerSubTab('compose'); }} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <button className="btn-primary" onClick={() => setShowCreatorComposeModal(true)} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <FiPlusCircle size={15} /> Create New Post
             </button>
-            <button className="btn-secondary" onClick={() => { setActiveTab('scheduler'); setSchedulerSubTab('calendar'); }} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <FiCalendar size={15} /> Schedule on Calendar
+            <button className="btn-secondary" onClick={() => setShowCreatorComposeModal(true)} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <FiCalendar size={15} /> Schedule Post
             </button>
             <button className="btn-secondary" onClick={() => setActiveTab('social')} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <FiLink size={15} /> Connect Social Account
+              <FiLink size={15} /> Connect Social Accounts
             </button>
             <button className="btn-secondary" onClick={() => setActiveTab('analytics')} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <FiBarChart2 size={15} /> View Analytics
+            </button>
+            <button className="btn-secondary" onClick={() => setActiveTab('reports')} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <FiFileText size={15} /> Generate Reports
             </button>
           </div>
         </div>
@@ -1288,6 +1345,123 @@ const Dashboard = () => {
         <main style={contentZoneStyle}>
           {renderContent()}
         </main>
+
+        {/* INLINE QUICK POST COMPOSE MODAL POPUP FOR CONTENT CREATOR */}
+        {showCreatorComposeModal && (
+          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+            <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '580px', background: 'var(--card-bg, #1e1e2d)', border: '1px solid var(--border-color)', borderRadius: '16px', padding: '24px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)', textAlign: 'left' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid var(--border-color)', paddingBottom: '12px' }}>
+                <h3 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <FiPlusCircle style={{ color: 'var(--primary)' }} /> Create & Submit New Post
+                </h3>
+                <button type="button" onClick={() => setShowCreatorComposeModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '1.2rem', cursor: 'pointer' }}>✕</button>
+              </div>
+
+              {composeError && (
+                <div style={{ padding: '10px 14px', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid var(--error)', borderRadius: '8px', color: 'var(--error)', fontSize: '0.84rem', marginBottom: '14px' }}>
+                  ⚠️ {composeError}
+                </div>
+              )}
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>Post Caption / Title Content</label>
+                  <textarea
+                    rows={4}
+                    value={composeCaption}
+                    onChange={(e) => setComposeCaption(e.target.value)}
+                    placeholder="Write caption details, announcement copy, or hashtags for your audience... (e.g. 🚀 Q3 SaaS Product Roadmap Launch!)"
+                    style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'rgba(0,0,0,0.2)', color: 'var(--text-primary)', fontSize: '0.88rem' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>Media URL / Image Asset (Optional)</label>
+                  <input
+                    type="text"
+                    value={composeMediaUrl}
+                    onChange={(e) => setComposeMediaUrl(e.target.value)}
+                    placeholder="https://images.unsplash.com/photo-1518770660439-4636190af475"
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'rgba(0,0,0,0.2)', color: 'var(--text-primary)', fontSize: '0.85rem' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>Target Social Channels</label>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {[
+                      { id: 'linkedin', name: 'LinkedIn 💼' },
+                      { id: 'instagram', name: 'Instagram 📸' },
+                      { id: 'facebook', name: 'Facebook 📘' },
+                      { id: 'twitter', name: 'X / Twitter 🐦' },
+                      { id: 'youtube', name: 'YouTube 📹' }
+                    ].map(ch => {
+                      const isSel = composePlatforms.includes(ch.id);
+                      return (
+                        <div
+                          key={ch.id}
+                          onClick={() => {
+                            setComposePlatforms(prev => isSel ? prev.filter(x => x !== ch.id) : [...prev, ch.id]);
+                          }}
+                          style={{
+                            padding: '6px 12px',
+                            borderRadius: '20px',
+                            border: isSel ? '1px solid var(--primary)' : '1px solid var(--border-color)',
+                            background: isSel ? 'rgba(99, 102, 241, 0.18)' : 'transparent',
+                            color: isSel ? 'var(--primary)' : 'var(--text-secondary)',
+                            fontSize: '0.8rem',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {ch.name}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: '600', color: 'var(--text-secondary)', marginBottom: '6px' }}>Publishing Date & Time</label>
+                  <input
+                    type="datetime-local"
+                    value={composeScheduleTime}
+                    onChange={(e) => setComposeScheduleTime(e.target.value)}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid var(--border-color)', background: 'rgba(0,0,0,0.2)', color: 'var(--text-primary)', fontSize: '0.85rem' }}
+                  />
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '12px' }}>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={() => setShowCreatorComposeModal(false)}
+                    style={{ height: '38px', fontSize: '0.82rem' }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    disabled={composeSubmitting}
+                    onClick={() => handleCreatorSubmitPost('draft')}
+                    style={{ height: '38px', fontSize: '0.82rem' }}
+                  >
+                    Save as Draft
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    disabled={composeSubmitting}
+                    onClick={() => handleCreatorSubmitPost('scheduled')}
+                    style={{ height: '38px', fontSize: '0.82rem' }}
+                  >
+                    {composeSubmitting ? 'Submitting...' : 'Schedule & Submit Post'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
