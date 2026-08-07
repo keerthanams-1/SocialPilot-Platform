@@ -229,9 +229,12 @@ const Scheduler = ({ initialTab }) => {
       loadPosts(activeTeamId);
     } catch (err) {
       console.error('Failed to schedule post from calendar modal', err);
-      const errMsg = err.response?.data?.detail || err.response?.data?.message || 'Failed to schedule post. Please verify all inputs.';
-      setModalError(errMsg);
-      setError(errMsg);
+      const detail = err.response?.data?.detail;
+      const errMsg = detail 
+        ? (typeof detail === 'string' ? detail : JSON.stringify(detail))
+        : (err.response?.data?.message || err.message || 'Failed to schedule post.');
+      setModalError(`Backend Error: ${errMsg}`);
+      setError(`Backend Error: ${errMsg}`);
     } finally {
       setModalSubmitting(false);
     }

@@ -260,11 +260,13 @@ class PostOut(BaseModel):
             }
             for field in ["media_urls", "platform_targets"]:
                 val = data[field]
-                if val is not None and isinstance(val, str):
+                if isinstance(val, str):
                     try:
                         data[field] = json.loads(val)
                     except Exception:
                         data[field] = []
+                elif isinstance(val, list):
+                    data[field] = val
                 else:
                     data[field] = []
             return data
@@ -276,7 +278,9 @@ class PostOut(BaseModel):
                         values[field] = json.loads(val)
                     except Exception:
                         values[field] = []
-                elif val is None:
+                elif isinstance(val, list):
+                    values[field] = val
+                else:
                     values[field] = []
             return values
 
