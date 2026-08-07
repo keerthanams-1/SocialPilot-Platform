@@ -573,14 +573,20 @@ const Dashboard = () => {
     const recentPosts = metrics.recent_posts || [
       { id: "p1", title: "🚀 SocialPilot 2.0 Feature Release: Multi-Channel Publishing & Automated Calendars", target_platform: "linkedin", published_at: "2026-08-05T10:00:00Z", status: "published", likes: 14200, comments: 1850, shares: 2100 },
       { id: "p2", title: "💡 5 Proven Social Media Growth Strategies for Enterprise SaaS Teams", target_platform: "instagram", published_at: "2026-08-09T14:30:00Z", status: "scheduled", likes: 12800, comments: 1420, shares: 1650 },
-      { id: "p3", title: "🎉 Live Q&A Stream: Scaling Brand Awareness & Lead Generation", target_platform: "facebook", published_at: "2026-08-11T16:00:00Z", status: "scheduled", likes: 9400, comments: 1180, shares: 1100 },
+      { id: "p3", title: "🎉 Live Q&A Stream: Scaling Brand Awareness & Lead Generation on Social Media", target_platform: "facebook", published_at: "2026-08-11T16:00:00Z", status: "scheduled", likes: 9400, comments: 1180, shares: 1100 },
       { id: "p4", title: "📈 Q3 Industry Benchmark Report: Social Media ROI & Conversion Funnels", target_platform: "linkedin", published_at: "2026-08-15T11:00:00Z", status: "draft", likes: 0, comments: 0, shares: 0 },
-      { id: "p5", title: "⚠️ Legacy API Connection Audit & Workspace Token Refresh Notice", target_platform: "twitter", published_at: "2026-08-01T09:00:00Z", status: "failed", likes: 0, comments: 0, shares: 0 }
+      { id: "p5", title: "🎬 Behind the Scenes: How We Create 30 Days of Content in 3 Hours", target_platform: "youtube", published_at: "2026-08-04T09:00:00Z", status: "published", likes: 8700, comments: 945, shares: 1240 },
+      { id: "p6", title: "📸 Visual Content Mastery: Carousel Templates That Get 42% More Reach", target_platform: "instagram", published_at: "2026-08-03T12:00:00Z", status: "published", likes: 11500, comments: 1380, shares: 1960 },
+      { id: "p7", title: "🧵 Thread: 10 LinkedIn Content Tactics That Grew Our Page to 50K Followers", target_platform: "twitter", published_at: "2026-08-02T08:30:00Z", status: "published", likes: 7200, comments: 830, shares: 2450 },
+      { id: "p8", title: "⚠️ Legacy API Connection Audit & Workspace Token Refresh Notice", target_platform: "twitter", published_at: "2026-08-01T09:00:00Z", status: "failed", likes: 0, comments: 0, shares: 0 }
     ];
 
     const upcomingScheduled = metrics.upcoming_scheduled_posts || [
       { id: "u1", caption: "💡 5 Proven Social Media Growth Strategies for Enterprise SaaS Teams", scheduled_at: "2026-08-09T14:30:00Z", target_platforms: ["instagram", "facebook"], countdown: "In 1d 18h" },
-      { id: "u2", caption: "🎉 Live Q&A Stream: Scaling Brand Awareness & Lead Generation", scheduled_at: "2026-08-11T16:00:00Z", target_platforms: ["facebook", "youtube"], countdown: "In 3d 21h" }
+      { id: "u2", caption: "🎉 Live Q&A Stream: Scaling Brand Awareness & Lead Generation", scheduled_at: "2026-08-11T16:00:00Z", target_platforms: ["facebook", "youtube"], countdown: "In 3d 21h" },
+      { id: "u3", caption: "📈 Q3 Industry Benchmark Report: Social Media ROI & Conversion", scheduled_at: "2026-08-15T11:00:00Z", target_platforms: ["linkedin"], countdown: "In 7d 9h" },
+      { id: "u4", caption: "🛍️ Back-to-School Campaign: 10 Content Ideas for September", scheduled_at: "2026-08-18T10:00:00Z", target_platforms: ["instagram", "twitter", "facebook"], countdown: "In 10d 8h" },
+      { id: "u5", caption: "🎙️ Podcast Episode Drop: Growth Marketing with AI Tools in 2026", scheduled_at: "2026-08-21T08:00:00Z", target_platforms: ["linkedin", "youtube"], countdown: "In 13d 6h" }
     ];
 
     return (
@@ -602,7 +608,7 @@ const Dashboard = () => {
         </div>
 
         {/* Header Title & Description */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
           <div>
             <h2 style={tabTitleStyle}>✍️ Content Creator Studio Command Center</h2>
             <p style={tabDescStyle}>
@@ -650,7 +656,146 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
-        
+
+        {/* CREATOR PERFORMANCE BADGES & OPTIMAL TIME WINDOW BANNER */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '12px', marginBottom: '24px' }}>
+          <div style={{ padding: '12px 16px', background: 'rgba(99, 102, 241, 0.12)', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '1.4rem' }}>🔥</span>
+            <div>
+              <strong style={{ fontSize: '0.84rem', color: 'var(--text-primary)', display: 'block' }}>14-Day Active Publishing Streak</strong>
+              <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>You've published content 14 days in a row!</span>
+            </div>
+          </div>
+          <div style={{ padding: '12px 16px', background: 'rgba(16, 185, 129, 0.12)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '1.4rem' }}>⏰</span>
+            <div>
+              <strong style={{ fontSize: '0.84rem', color: '#10b981', display: 'block' }}>Best Posting Window Today</strong>
+              <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>2:30 PM – 4:15 PM EST (Highest Engagement)</span>
+            </div>
+          </div>
+          <div style={{ padding: '12px 16px', background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '1.4rem' }}>📸</span>
+            <div>
+              <strong style={{ fontSize: '0.84rem', color: '#f59e0b', display: 'block' }}>Top Performing Format</strong>
+              <span style={{ fontSize: '0.74rem', color: 'var(--text-secondary)' }}>Visual Carousels (+42% higher reach)</span>
+            </div>
+          </div>
+        </div>
+
+        {/* WORKSPACE TEAM CONNECTION PANEL — Assigned by Administrator */}
+        <div style={{ marginBottom: '24px' }}>
+          <div className="glass-panel" style={{ padding: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+              <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <FiUsers style={{ color: 'var(--primary)' }} /> My Workspace Team — Connected by Administrator
+              </h4>
+              <span style={{ fontSize: '0.74rem', padding: '4px 10px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', fontWeight: 'bold', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
+                🟢 Enterprise Growth Team · Active
+              </span>
+            </div>
+
+            {/* Team Member Cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px', marginBottom: '18px' }}>
+              {[
+                { name: 'Keerthana M', role: 'Administrator 🛡️', roleColor: '#ef4444', work: 'Team Oversight & Role Assignment', status: 'Online', avatar: '👩‍💼' },
+                { name: 'Alex Morgan', role: 'Content Creator ✍️', roleColor: '#10b981', work: 'Copywriting & Media Uploads', status: 'Online', avatar: '🧑‍🎨' },
+                { name: 'Sarah Connor', role: 'Marketing Specialist 📣', roleColor: '#f59e0b', work: 'Campaign Strategy & Targeting', status: 'Busy', avatar: '👩‍💻' },
+                { name: 'David Miller', role: 'Business User 🏢', roleColor: '#3b82f6', work: 'Budget Approval & ROI Review', status: 'Away', avatar: '👨‍💼' },
+                { name: 'Emily Watson', role: 'Content Creator ✍️', roleColor: '#10b981', work: 'Instagram Feed & Calendar', status: 'Offline', avatar: '🧑‍🏫' },
+              ].map((m, i) => (
+                <div key={i} style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-color)', borderRadius: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+                    <span style={{ fontSize: '1.4rem' }}>{m.avatar}</span>
+                    <div>
+                      <strong style={{ fontSize: '0.84rem', color: 'var(--text-primary)', display: 'block' }}>{m.name}</strong>
+                      <span style={{ fontSize: '0.72rem', color: m.roleColor, fontWeight: '600' }}>{m.role}</span>
+                    </div>
+                  </div>
+                  <p style={{ fontSize: '0.73rem', color: 'var(--text-secondary)', margin: '4px 0 6px' }}>{m.work}</p>
+                  <span style={{
+                    fontSize: '0.7rem', fontWeight: 'bold',
+                    color: m.status === 'Online' ? '#10b981' : m.status === 'Busy' ? '#f59e0b' : m.status === 'Away' ? '#3b82f6' : '#64748b'
+                  }}>
+                    ● {m.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* Admin-Assigned Campaigns & Approval Queue */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
+              {/* Assigned Campaigns */}
+              <div style={{ padding: '14px', background: 'rgba(99, 102, 241, 0.06)', border: '1px solid rgba(99, 102, 241, 0.2)', borderRadius: '10px' }}>
+                <h5 style={{ margin: '0 0 10px', fontSize: '0.85rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <FiFolder size={14} /> Admin-Assigned Campaigns
+                </h5>
+                {[
+                  { name: 'Q3 Product Launch 🚀', deadline: 'Aug 15', priority: 'High', posts: 6 },
+                  { name: 'Brand Awareness Drive 📢', deadline: 'Aug 20', priority: 'Medium', posts: 4 },
+                  { name: 'Holiday Season Prep 🎉', deadline: 'Sep 01', priority: 'Low', posts: 8 },
+                ].map((c, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '7px 0', borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                    <div>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-primary)', fontWeight: '500' }}>{c.name}</span>
+                      <span style={{ fontSize: '0.71rem', color: 'var(--text-muted)', display: 'block' }}>{c.posts} posts · Due {c.deadline}</span>
+                    </div>
+                    <span style={{
+                      fontSize: '0.7rem', padding: '2px 7px', borderRadius: '8px', fontWeight: 'bold',
+                      background: c.priority === 'High' ? 'rgba(239,68,68,0.15)' : c.priority === 'Medium' ? 'rgba(245,158,11,0.15)' : 'rgba(16,185,129,0.15)',
+                      color: c.priority === 'High' ? '#ef4444' : c.priority === 'Medium' ? '#f59e0b' : '#10b981'
+                    }}>{c.priority}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Approval / Review Queue */}
+              <div style={{ padding: '14px', background: 'rgba(245, 158, 11, 0.06)', border: '1px solid rgba(245, 158, 11, 0.2)', borderRadius: '10px' }}>
+                <h5 style={{ margin: '0 0 10px', fontSize: '0.85rem', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <FiCheckCircle size={14} /> Content Approval Queue
+                </h5>
+                {[
+                  { title: '🚀 Product Launch Teaser Post', reviewer: 'Sarah Connor', status: 'Pending Review' },
+                  { title: '💡 5 Tips for Brand Growth', reviewer: 'Keerthana M', status: 'Approved ✅' },
+                  { title: '📊 Q3 Benchmark Infographic', reviewer: 'David Miller', status: 'Needs Revision' },
+                ].map((a, i) => (
+                  <div key={i} style={{ padding: '7px 0', borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                    <span style={{ fontSize: '0.8rem', color: 'var(--text-primary)', fontWeight: '500', display: 'block' }}>{a.title}</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '3px' }}>
+                      <span style={{ fontSize: '0.71rem', color: 'var(--text-muted)' }}>Reviewer: {a.reviewer}</span>
+                      <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: a.status === 'Approved ✅' ? '#10b981' : a.status === 'Needs Revision' ? '#ef4444' : '#f59e0b' }}>
+                        {a.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* My Content Goals This Week */}
+              <div style={{ padding: '14px', background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '10px' }}>
+                <h5 style={{ margin: '0 0 10px', fontSize: '0.85rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  🎯 My Content Goals This Week
+                </h5>
+                {[
+                  { goal: 'Publish 5 LinkedIn Posts', done: 4, total: 5 },
+                  { goal: 'Schedule Instagram Reels', done: 3, total: 4 },
+                  { goal: 'Write 2 Long-form Articles', done: 1, total: 2 },
+                  { goal: 'Upload Media Assets', done: 8, total: 10 },
+                ].map((g, i) => (
+                  <div key={i} style={{ marginBottom: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.77rem', color: 'var(--text-secondary)', marginBottom: '3px' }}>
+                      <span>{g.goal}</span>
+                      <span style={{ color: g.done >= g.total ? '#10b981' : 'var(--text-muted)', fontWeight: 'bold' }}>{g.done}/{g.total}</span>
+                    </div>
+                    <div style={{ height: '5px', background: 'rgba(255,255,255,0.08)', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: `${(g.done / g.total) * 100}%`, background: g.done >= g.total ? '#10b981' : 'var(--primary)', borderRadius: '4px', transition: 'width 0.6s ease' }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* SIMULATION TOAST NOTIFICATION BANNER */}
         {simulationToast && (
           <div style={{
