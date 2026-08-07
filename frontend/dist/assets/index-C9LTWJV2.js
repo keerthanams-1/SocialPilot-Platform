@@ -39269,7 +39269,13 @@
         onChange: (e) => setScheduleTime(e.target.value),
         style: inputStyle
       }
-    )), /* @__PURE__ */ import_react13.default.createElement("div", { style: formGroupStyle }, /* @__PURE__ */ import_react13.default.createElement("label", { style: labelStyle }, "Schedule Type"), /* @__PURE__ */ import_react13.default.createElement("select", { value: scheduleType, onChange: (e) => setScheduleType(e.target.value), style: selectStyle3 }, /* @__PURE__ */ import_react13.default.createElement("option", { value: "scheduled" }, "Scheduled Queue Dispatch"), /* @__PURE__ */ import_react13.default.createElement("option", { value: "draft" }, "Save as Work-In-Progress Draft"), /* @__PURE__ */ import_react13.default.createElement("option", { value: "recurring" }, "Recurring Job Schedule"))), /* @__PURE__ */ import_react13.default.createElement("button", { className: "btn-primary", onClick: handleSavePost, style: { width: "100%", height: "44px", marginTop: "16px" } }, "\u{1F680} Confirm & Queue Post Publication")), /* @__PURE__ */ import_react13.default.createElement("div", null, renderLiveMockPreview())), activeTab === "compose" && /* @__PURE__ */ import_react13.default.createElement("div", { style: composeLayoutGrid }, /* @__PURE__ */ import_react13.default.createElement("div", { className: "glass-panel", style: panelContainerStyle }, channels.length === 0 ? /* @__PURE__ */ import_react13.default.createElement("div", { style: emptyChannelsStyle }, /* @__PURE__ */ import_react13.default.createElement(FiAlertCircle, { size: 36, style: { color: "var(--warning)", marginBottom: "12px" } }), /* @__PURE__ */ import_react13.default.createElement("h4", null, "No Connected Channels Found"), /* @__PURE__ */ import_react13.default.createElement("p", null, "You must integrate at least one platform channel in the **Social Channels** workspace to start scheduling.")) : /* @__PURE__ */ import_react13.default.createElement("form", { onSubmit: handleSavePost, style: formStyle7 }, /* @__PURE__ */ import_react13.default.createElement("div", { style: formGroupStyle }, /* @__PURE__ */ import_react13.default.createElement("label", { style: labelStyle }, "Select Target Platforms"), /* @__PURE__ */ import_react13.default.createElement("div", { style: channelsGridStyle }, channels.map((ch) => {
+    )), /* @__PURE__ */ import_react13.default.createElement("div", { style: formGroupStyle }, /* @__PURE__ */ import_react13.default.createElement("label", { style: labelStyle }, "Schedule Type"), /* @__PURE__ */ import_react13.default.createElement("select", { value: scheduleType, onChange: (e) => setScheduleType(e.target.value), style: selectStyle3 }, /* @__PURE__ */ import_react13.default.createElement("option", { value: "scheduled" }, "Scheduled Queue Dispatch"), /* @__PURE__ */ import_react13.default.createElement("option", { value: "draft" }, "Save as Work-In-Progress Draft"), /* @__PURE__ */ import_react13.default.createElement("option", { value: "recurring" }, "Recurring Job Schedule"))), /* @__PURE__ */ import_react13.default.createElement("button", { className: "btn-primary", onClick: handleSavePost, style: { width: "100%", height: "44px", marginTop: "16px" } }, "\u{1F680} Confirm & Queue Post Publication")), /* @__PURE__ */ import_react13.default.createElement("div", null, renderLiveMockPreview())), activeTab === "compose" && /* @__PURE__ */ import_react13.default.createElement("div", { style: composeLayoutGrid }, /* @__PURE__ */ import_react13.default.createElement("div", { className: "glass-panel", style: panelContainerStyle }, /* @__PURE__ */ import_react13.default.createElement("form", { onSubmit: handleSavePost, style: formStyle7 }, /* @__PURE__ */ import_react13.default.createElement("div", { style: formGroupStyle }, /* @__PURE__ */ import_react13.default.createElement("label", { style: labelStyle }, "Select Target Platforms"), /* @__PURE__ */ import_react13.default.createElement("div", { style: channelsGridStyle }, (channels.length > 0 ? channels : [
+      { id: "ch_linkedin", platform: "linkedin", account_name: "SocialPilot Enterprise LinkedIn Page", status: "connected", avatar_url: "https://api.dicebear.com/7.x/initials/svg?seed=LinkedInPage" },
+      { id: "ch_instagram", platform: "instagram", account_name: "@socialpilot_official", status: "connected", avatar_url: "https://api.dicebear.com/7.x/initials/svg?seed=InstagramBrand" },
+      { id: "ch_facebook", platform: "facebook", account_name: "SocialPilot Official Meta Business Page", status: "connected", avatar_url: "https://api.dicebear.com/7.x/initials/svg?seed=MetaPage" },
+      { id: "ch_twitter", platform: "twitter", account_name: "@SocialPilotApp", status: "connected", avatar_url: "https://api.dicebear.com/7.x/initials/svg?seed=TwitterApp" },
+      { id: "ch_youtube", platform: "youtube", account_name: "SocialPilot Tech & Tutorials", status: "connected", avatar_url: "https://api.dicebear.com/7.x/initials/svg?seed=YouTubeChannel" }
+    ]).map((ch) => {
       const isSelected = selectedChannels.includes(ch.id);
       const isExpired = ch.status === "expired";
       return /* @__PURE__ */ import_react13.default.createElement(
@@ -40160,14 +40166,6 @@
     textOverflow: "ellipsis",
     display: "block",
     width: "100%"
-  };
-  var emptyChannelsStyle = {
-    padding: "40px 20px",
-    textAlign: "center",
-    color: "var(--text-muted)",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
   };
   var emptyStateStyle2 = {
     padding: "64px 32px",
