@@ -267,13 +267,188 @@ const Dashboard = () => {
     }
   };
 
+  const [dashboardRoleView, setDashboardRoleView] = useState('creator'); // creator, admin, marketing
+
   useEffect(() => {
     fetchDashboardMetrics();
   }, [fetchDashboardMetrics]);
 
   const renderRoleDashboard = () => {
-    // Render Unified Content Creator Studio Dashboard with 10 Professional Widgets & Real-time Database Integration for all users
     const metrics = dashboardMetrics || {};
+
+    // 1. ADMINISTRATOR COMMAND CENTER DASHBOARD
+    if (dashboardRoleView === 'admin' || user?.role?.name === 'Administrator' && dashboardRoleView !== 'creator' && dashboardRoleView !== 'marketing') {
+      const adminUsers = [
+        { id: "u1", name: "Keerthana M", email: "admin@socialpilot.com", role: "Administrator", team: "Enterprise Growth Team", status: "Active", last_login: "Just now" },
+        { id: "u2", name: "Alex Morgan", email: "creator@socialpilot.com", role: "Content Creator", team: "Marketing & Media", status: "Active", last_login: "10 mins ago" },
+        { id: "u3", name: "Sarah Connor", email: "sarah@acme.com", role: "Marketing Specialist", team: "Acme Digital Agency", status: "Active", last_login: "1 hour ago" },
+        { id: "u4", name: "David Miller", email: "david@enterprise.com", role: "Business User", team: "Global Ops", status: "Active", last_login: "3 hours ago" },
+        { id: "u5", name: "Emily Watson", email: "emily@brand.com", role: "Content Creator", team: "Creative Studio", status: "Inactive", last_login: "2 days ago" }
+      ];
+
+      const apiDrivers = [
+        { name: "LinkedIn OAuth & Publishing API", status: "Operational", latency: "115ms", quota: "88% Remaining" },
+        { name: "Facebook Graph API v19.0", status: "Operational", latency: "92ms", quota: "94% Remaining" },
+        { name: "Instagram Business Publishing API", status: "Operational", latency: "108ms", quota: "82% Remaining" },
+        { name: "X / Twitter API v2 Enterprise", status: "Operational", latency: "135ms", quota: "79% Remaining" },
+        { name: "YouTube Data API v3", status: "Operational", latency: "98ms", quota: "91% Remaining" }
+      ];
+
+      return (
+        <div style={welcomeCardStyle} className="glass-panel animate-fade-in">
+          {/* Workspace Command Center View Switcher */}
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', background: 'rgba(0,0,0,0.3)', padding: '6px', borderRadius: '12px', width: 'fit-content', border: '1px solid var(--border-color)', flexWrap: 'wrap' }}>
+            <button 
+              onClick={() => setDashboardRoleView('creator')} 
+              style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: dashboardRoleView === 'creator' ? 'var(--primary)' : 'transparent', color: dashboardRoleView === 'creator' ? '#fff' : 'var(--text-secondary)', fontWeight: '600', cursor: 'pointer', fontSize: '0.84rem' }}
+            >
+              ✍️ Content Creator Studio
+            </button>
+            <button 
+              onClick={() => setDashboardRoleView('admin')} 
+              style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: dashboardRoleView === 'admin' ? 'var(--primary)' : 'transparent', color: dashboardRoleView === 'admin' ? '#fff' : 'var(--text-secondary)', fontWeight: '600', cursor: 'pointer', fontSize: '0.84rem' }}
+            >
+              🛡️ Administrator Command Center
+            </button>
+            <button 
+              onClick={() => setDashboardRoleView('marketing')} 
+              style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: dashboardRoleView === 'marketing' ? 'var(--primary)' : 'transparent', color: dashboardRoleView === 'marketing' ? '#fff' : 'var(--text-secondary)', fontWeight: '600', cursor: 'pointer', fontSize: '0.84rem' }}
+            >
+              📣 Marketing Specialist View
+            </button>
+          </div>
+
+          {/* Admin Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
+            <div>
+              <h2 style={tabTitleStyle}>🛡️ Administrator Workspace Command Center</h2>
+              <p style={tabDescStyle}>
+                Welcome back, Administrator <strong>{user?.name || user?.full_name}</strong>! System health monitor, user role permissions, API rate limits, and audit logs.
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <button className="btn-primary" onClick={() => setActiveTab('team')} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <FiUsers size={15} /> Manage Workspace Users
+              </button>
+              <button className="btn-secondary" onClick={() => setActiveTab('settings')} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <FiSettings size={15} /> System Configurations
+              </button>
+            </div>
+          </div>
+
+          {/* Admin Summary Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '14px', marginBottom: '24px' }}>
+            <div style={statCardStyle} className="glass-panel">
+              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                <FiUsers style={{ color: 'var(--primary)' }} /> Registered Users
+              </h4>
+              <p style={statNumberStyle}>128</p>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Across 12 Workspace Teams</span>
+            </div>
+            <div style={statCardStyle} className="glass-panel">
+              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                <FiLayers style={{ color: '#10b981' }} /> Active Workspaces
+              </h4>
+              <p style={statNumberStyle}>12</p>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Enterprise & Agency</span>
+            </div>
+            <div style={statCardStyle} className="glass-panel">
+              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                <FiCheckCircle style={{ color: '#10b981' }} /> System Status
+              </h4>
+              <p style={statNumberStyle}>99.98%</p>
+              <span style={{ fontSize: '0.72rem', color: '#10b981' }}>🟢 All Clusters Healthy</span>
+            </div>
+            <div style={statCardStyle} className="glass-panel">
+              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                <FiActivity style={{ color: '#f59e0b' }} /> API Consumption
+              </h4>
+              <p style={statNumberStyle}>42.1K</p>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>/ 100,000 Daily Requests</span>
+            </div>
+            <div style={statCardStyle} className="glass-panel">
+              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                <FiLink style={{ color: '#8b5cf6' }} /> OAuth Connections
+              </h4>
+              <p style={statNumberStyle}>38</p>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Active Platform Tokens</span>
+            </div>
+            <div style={statCardStyle} className="glass-panel">
+              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                <FiFileText style={{ color: '#ef4444' }} /> Security Audits
+              </h4>
+              <p style={statNumberStyle}>1,420</p>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Log Events Ingested</span>
+            </div>
+          </div>
+
+          {/* Admin User Management Table */}
+          <div style={{ marginBottom: '24px' }}>
+            <h3 style={{ fontSize: '1rem', marginBottom: '12px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              👥 Workspace User Directory & Role Assignment
+            </h3>
+            <div style={{ overflowX: 'auto', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem', textAlign: 'left' }}>
+                <thead>
+                  <tr style={{ background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
+                    <th style={{ padding: '12px 16px' }}>User</th>
+                    <th style={{ padding: '12px 16px' }}>Email</th>
+                    <th style={{ padding: '12px 16px' }}>Role</th>
+                    <th style={{ padding: '12px 16px' }}>Team Workspace</th>
+                    <th style={{ padding: '12px 16px' }}>Status</th>
+                    <th style={{ padding: '12px 16px' }}>Last Activity</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {adminUsers.map(u => (
+                    <tr key={u.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                      <td style={{ padding: '12px 16px', fontWeight: '600', color: 'var(--text-primary)' }}>{u.name}</td>
+                      <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{u.email}</td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <span style={{ padding: '3px 8px', borderRadius: '12px', fontSize: '0.74rem', background: u.role === 'Administrator' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(99, 102, 241, 0.2)', color: u.role === 'Administrator' ? '#ef4444' : 'var(--primary)', fontWeight: 'bold' }}>
+                          {u.role}
+                        </span>
+                      </td>
+                      <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{u.team}</td>
+                      <td style={{ padding: '12px 16px' }}>
+                        <span style={{ color: u.status === 'Active' ? '#10b981' : '#94a3b8', fontWeight: 'bold' }}>
+                          ● {u.status}
+                        </span>
+                      </td>
+                      <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{u.last_login}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Social Media API Drivers Status Table */}
+          <div>
+            <h3 style={{ fontSize: '1rem', marginBottom: '12px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              🔌 Social Media Provider Drivers & API Latency Monitor
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px' }}>
+              {apiDrivers.map((drv, idx) => (
+                <div key={idx} style={{ padding: '14px 18px', background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border-color)', borderRadius: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                    <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>{drv.name}</strong>
+                    <span style={{ fontSize: '0.72rem', color: '#10b981', background: 'rgba(16, 185, 129, 0.15)', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold' }}>
+                      {drv.status}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                    <span>Latency: {drv.latency}</span>
+                    <span>Quota: {drv.quota}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     const recentPosts = metrics.recent_posts || [
       { id: "p1", title: "🚀 SocialPilot 2.0 Feature Release: Multi-Channel Publishing & Automated Calendars", target_platform: "linkedin", published_at: "2026-08-05T10:00:00Z", status: "published", likes: 14200, comments: 1850, shares: 2100 },
       { id: "p2", title: "💡 5 Proven Social Media Growth Strategies for Enterprise SaaS Teams", target_platform: "instagram", published_at: "2026-08-09T14:30:00Z", status: "scheduled", likes: 12800, comments: 1420, shares: 1650 },
@@ -289,6 +464,22 @@ const Dashboard = () => {
 
     return (
       <div style={welcomeCardStyle} className="glass-panel animate-fade-in">
+        {/* Workspace Command Center View Switcher */}
+        <div style={{ display: 'flex', gap: '8px', marginBottom: '20px', background: 'rgba(0,0,0,0.3)', padding: '6px', borderRadius: '12px', width: 'fit-content', border: '1px solid var(--border-color)', flexWrap: 'wrap' }}>
+          <button 
+            onClick={() => setDashboardRoleView('creator')} 
+            style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: dashboardRoleView === 'creator' ? 'var(--primary)' : 'transparent', color: dashboardRoleView === 'creator' ? '#fff' : 'var(--text-secondary)', fontWeight: '600', cursor: 'pointer', fontSize: '0.84rem' }}
+          >
+            ✍️ Content Creator Studio
+          </button>
+          <button 
+            onClick={() => setDashboardRoleView('admin')} 
+            style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: dashboardRoleView === 'admin' ? 'var(--primary)' : 'transparent', color: dashboardRoleView === 'admin' ? '#fff' : 'var(--text-secondary)', fontWeight: '600', cursor: 'pointer', fontSize: '0.84rem' }}
+          >
+            🛡️ Administrator Command Center
+          </button>
+        </div>
+
         {/* Header Title & Description */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
           <div>
