@@ -1,18 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
+import DevicePreviewModal from '../../components/DevicePreviewModal';
 import { 
   FiLayout, FiUser, FiUsers, FiCalendar, FiFolder, FiBarChart2, 
   FiSettings, FiLogOut, FiMenu, FiLink, FiBell, FiCheckCircle, 
   FiAlertCircle, FiInfo, FiEdit3, FiLayers, FiTrash2, FiSend, 
   FiRefreshCw, FiClock, FiPlus, FiChevronDown, FiChevronUp, 
-  FiFileText, FiImage, FiUpload, FiThumbsUp, FiMessageCircle, FiShare2 
+  FiFileText, FiImage, FiUpload, FiThumbsUp, FiMessageCircle, FiShare2, FiSmartphone 
 } from 'react-icons/fi';
 import { FaLinkedinIn, FaFacebookF, FaInstagram } from 'react-icons/fa';
 
 const Scheduler = ({ initialTab }) => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState(initialTab || 'compose');
+  const [showDevicePreviewModal, setShowDevicePreviewModal] = useState(false);
   const isCreator = user?.role?.name === 'Content Creator';
 
   useEffect(() => {
@@ -408,7 +410,17 @@ const Scheduler = ({ initialTab }) => {
 
     return (
       <div style={previewContainerStyle} className="glass-panel animate-fade-in">
-        <h4 style={previewTitleStyle}>Live Mock Preview</h4>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+          <h4 style={{ ...previewTitleStyle, margin: 0 }}>Live Mock Preview</h4>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => setShowDevicePreviewModal(true)}
+            style={{ height: '30px', fontSize: '0.76rem', display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(99, 102, 241, 0.2)', border: '1px solid var(--primary)' }}
+          >
+            <FiSmartphone size={14} /> Device Post Preview
+          </button>
+        </div>
         
         {/* Preview Platform Tab Toggle Buttons */}
         <div style={platformTabsStyle}>
@@ -1316,6 +1328,15 @@ const Scheduler = ({ initialTab }) => {
           </div>
         </div>
       )}
+
+      {/* DEVICE POST PREVIEW RESPONSIVE MODAL (NO ROUTE CHANGE) */}
+      <DevicePreviewModal 
+        isOpen={showDevicePreviewModal} 
+        onClose={() => setShowDevicePreviewModal(false)}
+        content={content}
+        mediaUrls={mediaUrls}
+        targetPlatforms={selectedChannels}
+      />
     </div>
   );
 };

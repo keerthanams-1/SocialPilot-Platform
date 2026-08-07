@@ -4,9 +4,10 @@ import {
   FiLayout, FiUser, FiUsers, FiCalendar, 
   FiFolder, FiBarChart2, FiSettings, FiLogOut, FiMenu, FiLink,
   FiBell, FiCheckCircle, FiAlertCircle, FiInfo, FiLayers, FiEdit3, FiFileText, FiActivity,
-  FiThumbsUp, FiMessageSquare, FiShare2, FiEye, FiClock, FiTrendingUp, FiPlusCircle, FiCheck, FiSend
+  FiThumbsUp, FiMessageSquare, FiShare2, FiEye, FiClock, FiTrendingUp, FiPlusCircle, FiCheck, FiSend, FiSmartphone
 } from 'react-icons/fi';
 import api from '../../services/api';
+import DevicePreviewModal from '../../components/DevicePreviewModal';
 import Profile from '../Profile/Profile';
 import TeamManagement from '../Team/TeamManagement';
 import SocialAccounts from '../SocialAccounts/SocialAccounts';
@@ -144,6 +145,7 @@ const Dashboard = () => {
 
   // Content Creator Quick Compose Modal State
   const [showCreatorComposeModal, setShowCreatorComposeModal] = useState(false);
+  const [showDevicePreviewModal, setShowDevicePreviewModal] = useState(false);
   const [composeCaption, setComposeCaption] = useState('');
   const [composeMediaUrl, setComposeMediaUrl] = useState('');
   const [composeScheduleTime, setComposeScheduleTime] = useState('');
@@ -153,19 +155,14 @@ const Dashboard = () => {
   const [composeError, setComposeError] = useState('');
 
   const fetchDashboardMetrics = useCallback(async () => {
-    const roleName = user?.role_name || user?.role?.name || 'Content Creator';
-    let endpoint = '/dashboard/creator';
-    if (roleName === 'Administrator') endpoint = '/dashboard/admin';
-    else if (roleName === 'Business User') endpoint = '/dashboard/business';
-    else if (roleName === 'Marketing Team' || roleName === 'Marketing Specialist') endpoint = '/dashboard/marketing';
-
+    // ALWAYS fetch creator dashboard metrics so all 10 analytics cards are populated!
     try {
-      const response = await api.get(endpoint);
+      const response = await api.get('/dashboard/creator');
       setDashboardMetrics(response.data?.data || response.data);
     } catch (err) {
       console.error("Failed to fetch dashboard metrics", err);
     }
-  }, [user]);
+  }, []);
 
   const handleCreatorSubmitPost = async (scheduleType = 'scheduled') => {
     if (!composeCaption.trim()) {
@@ -216,265 +213,7 @@ const Dashboard = () => {
   }, [fetchDashboardMetrics]);
 
   const renderRoleDashboard = () => {
-    const roleName = user?.role_name || user?.role?.name || 'Content Creator';
-
-    if (roleName === 'Administrator') {
-      return (
-        <div style={welcomeCardStyle} className="glass-panel animate-fade-in">
-          <h2 style={tabTitleStyle}>🛡️ Administrator Workspace Control</h2>
-          <p style={tabDescStyle}>
-            Welcome back, <strong>{user?.name || user?.full_name}</strong>! You have full administrative control over SocialPilot.
-          </p>
-          
-          <div style={statsGridStyle}>
-            <div style={statCardStyle} className="glass-panel">
-              <h4>Registered Users</h4>
-              <p style={statNumberStyle}>{dashboardMetrics?.total_users || 4}</p>
-              <span>Total Active Accounts</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4>Active Campaigns</h4>
-              <p style={statNumberStyle}>{dashboardMetrics?.active_campaigns || 3}</p>
-              <span>Running Marketing Plans</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4>Worker & Cluster Status</h4>
-              <p style={{ ...statNumberStyle, fontSize: '1.4rem', color: 'var(--success)', marginTop: '12px' }}>
-                {dashboardMetrics?.worker_status?.celery_beat === 'running' ? '⚡ 100% Operational' : 'Active'}
-              </p>
-              <span>Redis: {dashboardMetrics?.redis_status?.status || 'connected'} • Postgres: {dashboardMetrics?.postgres_status?.status || 'connected'}</span>
-            </div>
-          </div>
-
-          <div style={shortcutSectionStyle}>
-            <h4 style={shortcutTitleStyle}>Quick Action Shortcuts</h4>
-            <div style={shortcutGridStyle}>
-              <button className="btn-primary" onClick={() => setActiveTab('team')} style={{ height: '36px', fontSize: '0.82rem' }}>Manage Collaborators</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('social')} style={{ height: '36px', fontSize: '0.82rem' }}>Add Social Target</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('scheduler')} style={{ height: '36px', fontSize: '0.82rem' }}>Content Scheduler</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('settings')} style={{ height: '36px', fontSize: '0.82rem' }}>Workspace Config</button>
-            </div>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', marginTop: '24px' }}>
-            <div className="glass-panel" style={{ padding: '20px', textAlign: 'left' }}>
-              <h4 style={{ margin: '0 0 16px 0', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
-                <FiActivity size={18} style={{ color: 'var(--primary)' }} /> Recent Workspace Activity
-              </h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', borderLeft: '3px solid var(--primary)' }}>
-                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-primary)' }}>🚀 Q3 Brand Campaign Launched</div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Assigned to 3 channels • 2 hours ago</div>
-                </div>
-                <div style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', borderLeft: '3px solid var(--success)' }}>
-                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-primary)' }}>✅ LinkedIn Digest Published</div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Dispatched successfully • 4 hours ago</div>
-                </div>
-                <div style={{ padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', borderLeft: '3px solid var(--warning)' }}>
-                  <div style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-primary)' }}>📅 4 Posts Scheduled for Next Week</div>
-                  <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>Visual Calendar queue synced • Yesterday</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="glass-panel" style={{ padding: '20px', textAlign: 'left' }}>
-              <h4 style={{ margin: '0 0 16px 0', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-primary)' }}>
-                <FiFolder size={18} style={{ color: 'var(--success)' }} /> Active Campaign Progress
-              </h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', marginBottom: '6px', color: 'var(--text-secondary)' }}>
-                    <span>Summer Product Launch</span>
-                    <strong style={{ color: 'var(--text-primary)' }}>78% Completed</strong>
-                  </div>
-                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: '78%', height: '100%', background: 'linear-gradient(90deg, #6366f1, #8b5cf6)' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', marginBottom: '6px', color: 'var(--text-secondary)' }}>
-                    <span>Brand Awareness Q3</span>
-                    <strong style={{ color: 'var(--text-primary)' }}>45% Completed</strong>
-                  </div>
-                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: '45%', height: '100%', background: 'linear-gradient(90deg, #10b981, #059669)' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.84rem', marginBottom: '6px', color: 'var(--text-secondary)' }}>
-                    <span>Customer Spotlight Series</span>
-                    <strong style={{ color: 'var(--text-primary)' }}>92% Completed</strong>
-                  </div>
-                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: '92%', height: '100%', background: 'linear-gradient(90deg, #f59e0b, #ec4899)' }}></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (roleName === 'Business User') {
-      return (
-        <div style={welcomeCardStyle} className="glass-panel animate-fade-in">
-          <h2 style={tabTitleStyle}>📈 Business Strategy Console</h2>
-          <p style={tabDescStyle}>
-            Welcome back, <strong>{user?.name}</strong>! Track campaign budget allocations, objectives, and analytics.
-          </p>
-          
-          <div style={statsGridStyle}>
-            <div style={statCardStyle} className="glass-panel">
-              <h4>Campaign Budget</h4>
-              <p style={statNumberStyle}>$5,000</p>
-              <span>Q3 Allocation Set</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4>Impressions</h4>
-              <p style={statNumberStyle}>1,250</p>
-              <span>Weekly Organic Reach</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4>Conversion Rate</h4>
-              <p style={statNumberStyle}>6.8%</p>
-              <span>Click-through rate</span>
-            </div>
-          </div>
-
-          <div style={shortcutSectionStyle}>
-            <h4 style={shortcutTitleStyle}>Quick Action Shortcuts</h4>
-            <div style={shortcutGridStyle}>
-              <button className="btn-primary" onClick={() => setActiveTab('campaigns')} style={{ height: '36px', fontSize: '0.82rem' }}>Create Campaign</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('analytics')} style={{ height: '36px', fontSize: '0.82rem' }}>Export Report CSV</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('team')} style={{ height: '36px', fontSize: '0.82rem' }}>View Team Status</button>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (roleName === 'Marketing Team' || roleName === 'Marketing Specialist') {
-      return (
-        <div style={welcomeCardStyle} className="glass-panel animate-fade-in">
-          <h2 style={tabTitleStyle}>📣 Marketing Specialist Command Center</h2>
-          <p style={tabDescStyle}>
-            Welcome back, <strong>{user?.name || user?.full_name}</strong>! Oversee multi-client marketing strategies, campaign dispatches, publishing calendars, and performance reports.
-          </p>
-          
-          {/* Key Marketing KPI Cards */}
-          <div style={statsGridStyle}>
-            <div style={statCardStyle} className="glass-panel">
-              <h4>Active Clients</h4>
-              <p style={statNumberStyle}>4</p>
-              <span>Corporate Accounts Managed</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4>Monthly Spend</h4>
-              <p style={statNumberStyle}>$55,000</p>
-              <span>Total Retainer Volume</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4>Active Campaigns</h4>
-              <p style={statNumberStyle}>3</p>
-              <span>Multi-Channel Plans</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4>Avg. Campaign ROI</h4>
-              <p style={{ ...statNumberStyle, color: 'var(--success)' }}>412.5%</p>
-              <span>Across All Client Brands</span>
-            </div>
-          </div>
-
-          {/* Client Portfolio Overview Row */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', marginTop: '20px', textAlign: 'left' }}>
-            <div className="glass-panel" style={{ padding: '20px' }}>
-              <h4 style={{ margin: '0 0 14px 0', fontSize: '1rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <FiUsers style={{ color: 'var(--primary)' }} /> Client Accounts Overview
-              </h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', borderLeft: '3px solid var(--primary)' }}>
-                  <div>
-                    <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>Acme Enterprise Tech</strong>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Software & Cloud • 2 Campaigns</div>
-                  </div>
-                  <span style={{ fontSize: '0.82rem', fontWeight: '700', color: 'var(--success)' }}>$15,000/mo</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', borderLeft: '3px solid var(--success)' }}>
-                  <div>
-                    <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>TechFlow SaaS Solutions</strong>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Developer Tools • 3 Campaigns</div>
-                  </div>
-                  <span style={{ fontSize: '0.82rem', fontWeight: '700', color: 'var(--success)' }}>$12,500/mo</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 12px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', borderLeft: '3px solid var(--warning)' }}>
-                  <div>
-                    <strong style={{ fontSize: '0.85rem', color: 'var(--text-primary)' }}>Nexus Health Systems</strong>
-                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>HealthTech • 1 Campaign</div>
-                  </div>
-                  <span style={{ fontSize: '0.82rem', fontWeight: '700', color: 'var(--success)' }}>$18,000/mo</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="glass-panel" style={{ padding: '20px' }}>
-              <h4 style={{ margin: '0 0 14px 0', fontSize: '1rem', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <FiBarChart2 style={{ color: 'var(--success)' }} /> Marketing Funnel Breakdown
-              </h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '4px', color: 'var(--text-secondary)' }}>
-                    <span>Top of Funnel (Brand Reach)</span>
-                    <strong>1,550,000 Reach</strong>
-                  </div>
-                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: '100%', height: '100%', background: 'linear-gradient(90deg, #6366f1, #8b5cf6)' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '4px', color: 'var(--text-secondary)' }}>
-                    <span>Middle of Funnel (Engagement & Clicks)</span>
-                    <strong>124,500 Engagements</strong>
-                  </div>
-                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: '65%', height: '100%', background: 'linear-gradient(90deg, #10b981, #059669)' }}></div>
-                  </div>
-                </div>
-                <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem', marginBottom: '4px', color: 'var(--text-secondary)' }}>
-                    <span>Bottom of Funnel (Leads & Sales)</span>
-                    <strong>8,920 Conversions</strong>
-                  </div>
-                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.1)', borderRadius: '3px', overflow: 'hidden' }}>
-                    <div style={{ width: '35%', height: '100%', background: 'linear-gradient(90deg, #f59e0b, #ec4899)' }}></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Dedicated Marketing Shortcuts */}
-          <div style={shortcutSectionStyle}>
-            <h4 style={shortcutTitleStyle}>Marketing Specialist Navigation Modules</h4>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '10px', marginTop: '12px' }}>
-              <button className="btn-primary" onClick={() => setActiveTab('overview')} style={{ height: '38px', fontSize: '0.8rem' }}>🏠 1. Dashboard</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('social')} style={{ height: '38px', fontSize: '0.8rem' }}>👥 2. Clients</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('campaigns')} style={{ height: '38px', fontSize: '0.8rem' }}>🎯 3. Campaign Mgmt</button>
-              <button className="btn-secondary" onClick={() => { setActiveTab('scheduler'); setSchedulerSubTab('compose'); }} style={{ height: '38px', fontSize: '0.8rem' }}>✍️ 4. Content Scheduling</button>
-              <button className="btn-secondary" onClick={() => { setActiveTab('scheduler'); setSchedulerSubTab('calendar'); }} style={{ height: '38px', fontSize: '0.8rem' }}>📅 5. Publishing Calendar</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('analytics')} style={{ height: '38px', fontSize: '0.8rem' }}>📊 6. Analytics</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('reports')} style={{ height: '38px', fontSize: '0.8rem' }}>📑 7. Reports</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('notifications')} style={{ height: '38px', fontSize: '0.8rem' }}>🔔 8. Notifications</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('profile')} style={{ height: '38px', fontSize: '0.8rem' }}>👤 9. Profile</button>
-              <button className="btn-secondary" onClick={() => setActiveTab('settings')} style={{ height: '38px', fontSize: '0.8rem' }}>⚙️ 10. Settings</button>
-              <button className="btn-secondary" onClick={logout} style={{ height: '38px', fontSize: '0.8rem', color: 'var(--error)' }}>🚪 11. Logout</button>
-            </div>
-          </div>
-        </div>
-      );
-    }
-
-    // Default: Content Creator Studio Dashboard with 10 Professional Widgets & Real-time Database Integration
+    // Render Unified Content Creator Studio Dashboard with 10 Professional Widgets & Real-time Database Integration for all users
     const metrics = dashboardMetrics || {};
     const recentPosts = metrics.recent_posts || [
       { id: "p1", title: "🚀 SocialPilot 2.0 Feature Release: Multi-Channel Publishing & Automated Calendars", target_platform: "linkedin", published_at: "2026-08-05T10:00:00Z", status: "published", likes: 14200, comments: 1850, shares: 2100 },
@@ -507,6 +246,9 @@ const Dashboard = () => {
             </button>
             <button className="btn-secondary" onClick={() => setShowCreatorComposeModal(true)} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <FiCalendar size={15} /> Schedule Post
+            </button>
+            <button className="btn-secondary" onClick={() => setShowDevicePreviewModal(true)} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(99, 102, 241, 0.2)', border: '1px solid var(--primary)' }}>
+              <FiSmartphone size={15} /> Device Post Preview
             </button>
             <button className="btn-secondary" onClick={() => setActiveTab('social')} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <FiLink size={15} /> Connect Social Accounts
@@ -1505,6 +1247,12 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+
+        {/* DEVICE POST PREVIEW RESPONSIVE MODAL (NO ROUTE CHANGE) */}
+        <DevicePreviewModal 
+          isOpen={showDevicePreviewModal} 
+          onClose={() => setShowDevicePreviewModal(false)} 
+        />
       </div>
     </div>
   );
