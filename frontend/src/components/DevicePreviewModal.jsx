@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   FiSmartphone, FiTablet, FiMonitor, FiX, FiThumbsUp, 
   FiMessageSquare, FiShare2, FiHeart, FiRepeat, FiSend, 
-  FiCheckCircle, FiMoreHorizontal, FiGlobe
+  FiCheckCircle, FiMoreHorizontal, FiGlobe, FiLayers
 } from 'react-icons/fi';
 import { FaLinkedinIn, FaFacebookF, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
@@ -17,19 +17,70 @@ export const DevicePreviewModal = ({
   const { user } = useAuth();
   const [deviceMode, setDeviceMode] = useState('mobile'); // mobile, tablet, desktop
   const [selectedPlatform, setSelectedPlatform] = useState('linkedin'); // linkedin, facebook, instagram, twitter, youtube
+  const [selectedDemoIndex, setSelectedDemoIndex] = useState(0);
 
   if (!isOpen) return null;
 
+  // Rich Demo Post Dataset
+  const demoPosts = [
+    {
+      id: "demo_1",
+      title: "🚀 Product Launch Announcement",
+      caption: "🚀 SocialPilot 2.0 Feature Release: Multi-Channel Publishing, Automated Calendars & Real-Time Analytics! Scale your social reach effortlesly. #SocialPilot #SaaS #Marketing",
+      mediaUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&auto=format&fit=crop&q=80",
+      likes: "14,200",
+      comments: "1,850",
+      shares: "2,100",
+      views: "84.5K"
+    },
+    {
+      id: "demo_2",
+      title: "💡 SaaS Growth Strategy Breakdown",
+      caption: "💡 5 Proven Social Media Growth Strategies for Enterprise SaaS Teams. Boost organic reach by 300% with structured content pillars & automated scheduling! #GrowthHacks #B2B",
+      mediaUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1000&auto=format&fit=crop&q=80",
+      likes: "12,800",
+      comments: "1,420",
+      shares: "1,650",
+      views: "72.4K"
+    },
+    {
+      id: "demo_3",
+      title: "🎉 Live Q&A & Webinar Stream",
+      caption: "🎉 Live Q&A Stream: Scaling Brand Awareness & Lead Generation across Meta, LinkedIn & YouTube. Join our lead growth architects this Thursday at 10 AM EST!",
+      mediaUrl: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=1000&auto=format&fit=crop&q=80",
+      likes: "9,400",
+      comments: "1,180",
+      shares: "1,100",
+      views: "48.2K"
+    },
+    {
+      id: "demo_4",
+      title: "🔥 Creator Case Study & Spotlight",
+      caption: "🔥 Creator Spotlight: How Apex Marketing Agency Automated 80% of Client Publishing Workflows using SocialPilot's Visual Calendar. Read the full case study!",
+      mediaUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&auto=format&fit=crop&q=80",
+      likes: "18,500",
+      comments: "2,140",
+      shares: "2,650",
+      views: "96.2K"
+    },
+    {
+      id: "demo_5",
+      title: "📈 Q3 Industry Benchmark Report",
+      caption: "📈 Q3 Industry Benchmark Report: Social Media ROI, Conversion Funnels & Audience Growth Trends. Download the free 30-page PDF report now!",
+      mediaUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1000&auto=format&fit=crop&q=80",
+      likes: "6,200",
+      comments: "680",
+      shares: "890",
+      views: "34.8K"
+    }
+  ];
+
+  const activeDemo = demoPosts[selectedDemoIndex];
   const profileName = user?.name || user?.full_name || 'Enterprise Publisher';
   const profilePic = `https://api.dicebear.com/7.x/initials/svg?seed=${profileName}`;
   
-  const displayCaption = content && content.trim().length > 0 
-    ? content 
-    : "🚀 SocialPilot 2.0 Feature Release: Multi-Channel Publishing, Automated Calendars & Real-Time Analytics! #SocialPilot #Marketing #SaaSGrowth";
-
-  const displayMedia = Array.isArray(mediaUrls) && mediaUrls.length > 0 
-    ? mediaUrls[0] 
-    : "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&auto=format&fit=crop&q=80";
+  const displayCaption = content && content.trim().length > 0 ? content : activeDemo.caption;
+  const displayMedia = Array.isArray(mediaUrls) && mediaUrls.length > 0 ? mediaUrls[0] : activeDemo.mediaUrl;
 
   // Device Container Widths
   const getDeviceWidth = () => {
@@ -48,8 +99,8 @@ export const DevicePreviewModal = ({
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'rgba(0, 0, 0, 0.82)',
-      backdropFilter: 'blur(8px)',
+      background: 'rgba(0, 0, 0, 0.85)',
+      backdropFilter: 'blur(10px)',
       zIndex: 99999,
       display: 'flex',
       flexDirection: 'column',
@@ -66,7 +117,7 @@ export const DevicePreviewModal = ({
         borderRadius: '16px 16px 0 0',
         padding: '16px 24px',
         display: 'flex',
-        justifyContent: 'space-between',
+        justify: 'space-between',
         alignItems: 'center',
         flexWrap: 'wrap',
         gap: '12px'
@@ -76,8 +127,31 @@ export const DevicePreviewModal = ({
             📱 Device Post Live Preview
           </h3>
           <span style={{ fontSize: '0.75rem', padding: '3px 8px', borderRadius: '12px', background: 'rgba(99, 102, 241, 0.2)', color: 'var(--primary)', fontWeight: 'bold' }}>
-            Interactive Modal
+            Interactive Demo
           </span>
+        </div>
+
+        {/* Demo Post Selection Selector Dropdown */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <FiLayers style={{ color: 'var(--primary)' }} />
+          <select
+            value={selectedDemoIndex}
+            onChange={(e) => setSelectedDemoIndex(Number(e.target.value))}
+            style={{
+              padding: '6px 12px',
+              borderRadius: '8px',
+              border: '1px solid var(--border-color)',
+              background: 'rgba(0,0,0,0.4)',
+              color: 'var(--text-primary)',
+              fontSize: '0.82rem',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            {demoPosts.map((dp, idx) => (
+              <option key={dp.id} value={idx}>{dp.title}</option>
+            ))}
+          </select>
         </div>
 
         {/* Viewport Device Mode Selector */}
@@ -89,7 +163,7 @@ export const DevicePreviewModal = ({
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '6px 14px',
+              padding: '6px 12px',
               borderRadius: '8px',
               border: 'none',
               background: deviceMode === 'mobile' ? 'var(--primary)' : 'transparent',
@@ -99,7 +173,7 @@ export const DevicePreviewModal = ({
               fontWeight: '600'
             }}
           >
-            <FiSmartphone size={15} /> Mobile (375px)
+            <FiSmartphone size={14} /> Mobile
           </button>
           <button
             type="button"
@@ -108,7 +182,7 @@ export const DevicePreviewModal = ({
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '6px 14px',
+              padding: '6px 12px',
               borderRadius: '8px',
               border: 'none',
               background: deviceMode === 'tablet' ? 'var(--primary)' : 'transparent',
@@ -118,7 +192,7 @@ export const DevicePreviewModal = ({
               fontWeight: '600'
             }}
           >
-            <FiTablet size={15} /> Tablet (680px)
+            <FiTablet size={14} /> Tablet
           </button>
           <button
             type="button"
@@ -127,7 +201,7 @@ export const DevicePreviewModal = ({
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '6px 14px',
+              padding: '6px 12px',
               borderRadius: '8px',
               border: 'none',
               background: deviceMode === 'desktop' ? 'var(--primary)' : 'transparent',
@@ -137,7 +211,7 @@ export const DevicePreviewModal = ({
               fontWeight: '600'
             }}
           >
-            <FiMonitor size={15} /> Desktop (850px)
+            <FiMonitor size={14} /> Desktop
           </button>
         </div>
 
@@ -149,8 +223,8 @@ export const DevicePreviewModal = ({
             background: 'rgba(255, 255, 255, 0.1)',
             border: 'none',
             color: 'var(--text-primary)',
-            width: '36px',
-            height: '36px',
+            width: '34px',
+            height: '34px',
             borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
@@ -260,8 +334,8 @@ export const DevicePreviewModal = ({
               )}
 
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.74rem', color: '#94a3b8', borderBottom: '1px solid #334155', paddingBottom: '8px', marginBottom: '10px' }}>
-                <span>👍 14,200 • 1,850 comments</span>
-                <span>2,100 shares</span>
+                <span>👍 {activeDemo.likes} • {activeDemo.comments} comments</span>
+                <span>{activeDemo.shares} shares</span>
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-around', color: '#94a3b8', fontSize: '0.82rem', fontWeight: '600' }}>
@@ -297,9 +371,9 @@ export const DevicePreviewModal = ({
               )}
 
               <div style={{ display: 'flex', justifyContent: 'space-around', color: '#94a3b8', fontSize: '0.82rem', borderTop: '1px solid #334155', paddingTop: '10px' }}>
-                <span>👍 Like</span>
-                <span>💬 Comment</span>
-                <span>↗️ Share</span>
+                <span>👍 Like ({activeDemo.likes})</span>
+                <span>💬 Comment ({activeDemo.comments})</span>
+                <span>↗️ Share ({activeDemo.shares})</span>
               </div>
             </div>
           )}
@@ -327,7 +401,7 @@ export const DevicePreviewModal = ({
                 </div>
               </div>
 
-              <div style={{ fontSize: '0.82rem', fontWeight: '700', marginBottom: '4px' }}>12,840 likes</div>
+              <div style={{ fontSize: '0.82rem', fontWeight: '700', marginBottom: '4px' }}>{activeDemo.likes} likes</div>
               <div style={{ fontSize: '0.82rem', lineHeight: '1.4', color: '#f1f5f9' }}>
                 <strong>{profileName.toLowerCase().replace(/\s+/g, '_')}</strong> {displayCaption}
               </div>
@@ -353,10 +427,10 @@ export const DevicePreviewModal = ({
                     </div>
                   )}
                   <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748b', fontSize: '0.8rem', marginTop: '12px' }}>
-                    <span>💬 412</span>
-                    <span>🔁 1,840</span>
-                    <span>❤️ 9,250</span>
-                    <span>📊 84.5K</span>
+                    <span>💬 {activeDemo.comments}</span>
+                    <span>🔁 {activeDemo.shares}</span>
+                    <span>❤️ {activeDemo.likes}</span>
+                    <span>📊 {activeDemo.views}</span>
                   </div>
                 </div>
               </div>
@@ -376,7 +450,7 @@ export const DevicePreviewModal = ({
                 <img src={profilePic} alt="User" style={{ width: '36px', height: '36px', borderRadius: '50%' }} />
                 <div>
                   <h4 style={{ margin: 0, fontSize: '0.9rem', color: '#fff' }}>{displayCaption.slice(0, 70)}...</h4>
-                  <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px' }}>{profileName} • 48K views • 2 hours ago</div>
+                  <div style={{ fontSize: '0.75rem', color: '#94a3b8', marginTop: '4px' }}>{profileName} • {activeDemo.views} views • 2 hours ago</div>
                 </div>
               </div>
             </div>

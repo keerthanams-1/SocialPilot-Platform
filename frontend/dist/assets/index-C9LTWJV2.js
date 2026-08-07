@@ -37230,11 +37230,65 @@
     const { user } = useAuth();
     const [deviceMode, setDeviceMode] = (0, import_react9.useState)("mobile");
     const [selectedPlatform, setSelectedPlatform] = (0, import_react9.useState)("linkedin");
+    const [selectedDemoIndex, setSelectedDemoIndex] = (0, import_react9.useState)(0);
     if (!isOpen) return null;
+    const demoPosts = [
+      {
+        id: "demo_1",
+        title: "\u{1F680} Product Launch Announcement",
+        caption: "\u{1F680} SocialPilot 2.0 Feature Release: Multi-Channel Publishing, Automated Calendars & Real-Time Analytics! Scale your social reach effortlesly. #SocialPilot #SaaS #Marketing",
+        mediaUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&auto=format&fit=crop&q=80",
+        likes: "14,200",
+        comments: "1,850",
+        shares: "2,100",
+        views: "84.5K"
+      },
+      {
+        id: "demo_2",
+        title: "\u{1F4A1} SaaS Growth Strategy Breakdown",
+        caption: "\u{1F4A1} 5 Proven Social Media Growth Strategies for Enterprise SaaS Teams. Boost organic reach by 300% with structured content pillars & automated scheduling! #GrowthHacks #B2B",
+        mediaUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1000&auto=format&fit=crop&q=80",
+        likes: "12,800",
+        comments: "1,420",
+        shares: "1,650",
+        views: "72.4K"
+      },
+      {
+        id: "demo_3",
+        title: "\u{1F389} Live Q&A & Webinar Stream",
+        caption: "\u{1F389} Live Q&A Stream: Scaling Brand Awareness & Lead Generation across Meta, LinkedIn & YouTube. Join our lead growth architects this Thursday at 10 AM EST!",
+        mediaUrl: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=1000&auto=format&fit=crop&q=80",
+        likes: "9,400",
+        comments: "1,180",
+        shares: "1,100",
+        views: "48.2K"
+      },
+      {
+        id: "demo_4",
+        title: "\u{1F525} Creator Case Study & Spotlight",
+        caption: "\u{1F525} Creator Spotlight: How Apex Marketing Agency Automated 80% of Client Publishing Workflows using SocialPilot's Visual Calendar. Read the full case study!",
+        mediaUrl: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&auto=format&fit=crop&q=80",
+        likes: "18,500",
+        comments: "2,140",
+        shares: "2,650",
+        views: "96.2K"
+      },
+      {
+        id: "demo_5",
+        title: "\u{1F4C8} Q3 Industry Benchmark Report",
+        caption: "\u{1F4C8} Q3 Industry Benchmark Report: Social Media ROI, Conversion Funnels & Audience Growth Trends. Download the free 30-page PDF report now!",
+        mediaUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1000&auto=format&fit=crop&q=80",
+        likes: "6,200",
+        comments: "680",
+        shares: "890",
+        views: "34.8K"
+      }
+    ];
+    const activeDemo = demoPosts[selectedDemoIndex];
     const profileName = user?.name || user?.full_name || "Enterprise Publisher";
     const profilePic = `https://api.dicebear.com/7.x/initials/svg?seed=${profileName}`;
-    const displayCaption = content && content.trim().length > 0 ? content : "\u{1F680} SocialPilot 2.0 Feature Release: Multi-Channel Publishing, Automated Calendars & Real-Time Analytics! #SocialPilot #Marketing #SaaSGrowth";
-    const displayMedia = Array.isArray(mediaUrls) && mediaUrls.length > 0 ? mediaUrls[0] : "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1000&auto=format&fit=crop&q=80";
+    const displayCaption = content && content.trim().length > 0 ? content : activeDemo.caption;
+    const displayMedia = Array.isArray(mediaUrls) && mediaUrls.length > 0 ? mediaUrls[0] : activeDemo.mediaUrl;
     const getDeviceWidth = () => {
       switch (deviceMode) {
         case "mobile":
@@ -37253,8 +37307,8 @@
       left: 0,
       right: 0,
       bottom: 0,
-      background: "rgba(0, 0, 0, 0.82)",
-      backdropFilter: "blur(8px)",
+      background: "rgba(0, 0, 0, 0.85)",
+      backdropFilter: "blur(10px)",
       zIndex: 99999,
       display: "flex",
       flexDirection: "column",
@@ -37269,11 +37323,28 @@
       borderRadius: "16px 16px 0 0",
       padding: "16px 24px",
       display: "flex",
-      justifyContent: "space-between",
+      justify: "space-between",
       alignItems: "center",
       flexWrap: "wrap",
       gap: "12px"
-    } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", alignItems: "center", gap: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("h3", { style: { margin: 0, fontSize: "1.1rem", color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "8px" } }, "\u{1F4F1} Device Post Live Preview"), /* @__PURE__ */ import_react9.default.createElement("span", { style: { fontSize: "0.75rem", padding: "3px 8px", borderRadius: "12px", background: "rgba(99, 102, 241, 0.2)", color: "var(--primary)", fontWeight: "bold" } }, "Interactive Modal")), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", background: "rgba(0,0,0,0.3)", padding: "4px", borderRadius: "10px", border: "1px solid var(--border-color)" } }, /* @__PURE__ */ import_react9.default.createElement(
+    } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", alignItems: "center", gap: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("h3", { style: { margin: 0, fontSize: "1.1rem", color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "8px" } }, "\u{1F4F1} Device Post Live Preview"), /* @__PURE__ */ import_react9.default.createElement("span", { style: { fontSize: "0.75rem", padding: "3px 8px", borderRadius: "12px", background: "rgba(99, 102, 241, 0.2)", color: "var(--primary)", fontWeight: "bold" } }, "Interactive Demo")), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", alignItems: "center", gap: "8px" } }, /* @__PURE__ */ import_react9.default.createElement(FiLayers, { style: { color: "var(--primary)" } }), /* @__PURE__ */ import_react9.default.createElement(
+      "select",
+      {
+        value: selectedDemoIndex,
+        onChange: (e) => setSelectedDemoIndex(Number(e.target.value)),
+        style: {
+          padding: "6px 12px",
+          borderRadius: "8px",
+          border: "1px solid var(--border-color)",
+          background: "rgba(0,0,0,0.4)",
+          color: "var(--text-primary)",
+          fontSize: "0.82rem",
+          fontWeight: "600",
+          cursor: "pointer"
+        }
+      },
+      demoPosts.map((dp, idx) => /* @__PURE__ */ import_react9.default.createElement("option", { key: dp.id, value: idx }, dp.title))
+    )), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", background: "rgba(0,0,0,0.3)", padding: "4px", borderRadius: "10px", border: "1px solid var(--border-color)" } }, /* @__PURE__ */ import_react9.default.createElement(
       "button",
       {
         type: "button",
@@ -37282,7 +37353,7 @@
           display: "flex",
           alignItems: "center",
           gap: "6px",
-          padding: "6px 14px",
+          padding: "6px 12px",
           borderRadius: "8px",
           border: "none",
           background: deviceMode === "mobile" ? "var(--primary)" : "transparent",
@@ -37292,8 +37363,8 @@
           fontWeight: "600"
         }
       },
-      /* @__PURE__ */ import_react9.default.createElement(FiSmartphone, { size: 15 }),
-      " Mobile (375px)"
+      /* @__PURE__ */ import_react9.default.createElement(FiSmartphone, { size: 14 }),
+      " Mobile"
     ), /* @__PURE__ */ import_react9.default.createElement(
       "button",
       {
@@ -37303,7 +37374,7 @@
           display: "flex",
           alignItems: "center",
           gap: "6px",
-          padding: "6px 14px",
+          padding: "6px 12px",
           borderRadius: "8px",
           border: "none",
           background: deviceMode === "tablet" ? "var(--primary)" : "transparent",
@@ -37313,8 +37384,8 @@
           fontWeight: "600"
         }
       },
-      /* @__PURE__ */ import_react9.default.createElement(FiTablet, { size: 15 }),
-      " Tablet (680px)"
+      /* @__PURE__ */ import_react9.default.createElement(FiTablet, { size: 14 }),
+      " Tablet"
     ), /* @__PURE__ */ import_react9.default.createElement(
       "button",
       {
@@ -37324,7 +37395,7 @@
           display: "flex",
           alignItems: "center",
           gap: "6px",
-          padding: "6px 14px",
+          padding: "6px 12px",
           borderRadius: "8px",
           border: "none",
           background: deviceMode === "desktop" ? "var(--primary)" : "transparent",
@@ -37334,8 +37405,8 @@
           fontWeight: "600"
         }
       },
-      /* @__PURE__ */ import_react9.default.createElement(FiMonitor, { size: 15 }),
-      " Desktop (850px)"
+      /* @__PURE__ */ import_react9.default.createElement(FiMonitor, { size: 14 }),
+      " Desktop"
     )), /* @__PURE__ */ import_react9.default.createElement(
       "button",
       {
@@ -37345,8 +37416,8 @@
           background: "rgba(255, 255, 255, 0.1)",
           border: "none",
           color: "var(--text-primary)",
-          width: "36px",
-          height: "36px",
+          width: "34px",
+          height: "34px",
           borderRadius: "50%",
           display: "flex",
           alignItems: "center",
@@ -37412,7 +37483,7 @@
       boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6)",
       textAlign: "left",
       color: "#ffffff"
-    } }, deviceMode === "mobile" && /* @__PURE__ */ import_react9.default.createElement("div", { style: { width: "120px", height: "14px", background: "#2a2e3d", borderRadius: "0 0 10px 10px", margin: "-20px auto 16px auto" } }), selectedPlatform === "linkedin" && /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "12px", alignItems: "center", marginBottom: "12px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: profilePic, alt: "User", style: { width: "46px", height: "46px", borderRadius: "50%" } }), /* @__PURE__ */ import_react9.default.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.9rem", fontWeight: "700", color: "#fff", display: "flex", alignItems: "center", gap: "6px" } }, profileName, " ", /* @__PURE__ */ import_react9.default.createElement("span", { style: { fontSize: "0.72rem", color: "#94a3b8" } }, "\u2022 1st")), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.75rem", color: "#94a3b8" } }, "Enterprise Growth Specialist @ SocialPilot"), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.72rem", color: "#64748b", display: "flex", alignItems: "center", gap: "4px" } }, "Just now \u2022 ", /* @__PURE__ */ import_react9.default.createElement(FiGlobe, { size: 11 }))), /* @__PURE__ */ import_react9.default.createElement(FiMoreHorizontal, { style: { color: "#94a3b8" } })), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.88rem", lineHeight: "1.5", color: "#e2e8f0", marginBottom: "12px", whiteSpace: "pre-wrap" } }, displayCaption), displayMedia && /* @__PURE__ */ import_react9.default.createElement("div", { style: { borderRadius: "8px", overflow: "hidden", marginBottom: "12px", maxHeight: "340px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: displayMedia, alt: "Post asset", style: { width: "100%", height: "100%", objectFit: "cover" } })), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", fontSize: "0.74rem", color: "#94a3b8", borderBottom: "1px solid #334155", paddingBottom: "8px", marginBottom: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F44D} 14,200 \u2022 1,850 comments"), /* @__PURE__ */ import_react9.default.createElement("span", null, "2,100 shares")), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", justifyContent: "space-around", color: "#94a3b8", fontSize: "0.82rem", fontWeight: "600" } }, /* @__PURE__ */ import_react9.default.createElement("span", { style: { display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" } }, /* @__PURE__ */ import_react9.default.createElement(FiThumbsUp, null), " Like"), /* @__PURE__ */ import_react9.default.createElement("span", { style: { display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" } }, /* @__PURE__ */ import_react9.default.createElement(FiMessageSquare, null), " Comment"), /* @__PURE__ */ import_react9.default.createElement("span", { style: { display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" } }, /* @__PURE__ */ import_react9.default.createElement(FiShare2, null), " Repost"), /* @__PURE__ */ import_react9.default.createElement("span", { style: { display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" } }, /* @__PURE__ */ import_react9.default.createElement(FiSend, null), " Send"))), selectedPlatform === "facebook" && /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "12px", alignItems: "center", marginBottom: "12px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: profilePic, alt: "User", style: { width: "42px", height: "42px", borderRadius: "50%" } }), /* @__PURE__ */ import_react9.default.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.9rem", fontWeight: "700", color: "#fff" } }, profileName), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.74rem", color: "#94a3b8", display: "flex", alignItems: "center", gap: "4px" } }, "Just now \u2022 \u{1F310} Facebook Page"))), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.88rem", lineHeight: "1.5", color: "#e2e8f0", marginBottom: "12px" } }, displayCaption), displayMedia && /* @__PURE__ */ import_react9.default.createElement("div", { style: { borderRadius: "8px", overflow: "hidden", marginBottom: "12px", maxHeight: "340px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: displayMedia, alt: "Post asset", style: { width: "100%", height: "100%", objectFit: "cover" } })), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", justifyContent: "space-around", color: "#94a3b8", fontSize: "0.82rem", borderTop: "1px solid #334155", paddingTop: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F44D} Like"), /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F4AC} Comment"), /* @__PURE__ */ import_react9.default.createElement("span", null, "\u2197\uFE0F Share"))), selectedPlatform === "instagram" && /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "10px", alignItems: "center", marginBottom: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: profilePic, alt: "User", style: { width: "36px", height: "36px", borderRadius: "50%", border: "2px solid #e1306c" } }), /* @__PURE__ */ import_react9.default.createElement("strong", { style: { fontSize: "0.88rem", color: "#fff", flex: 1 } }, profileName.toLowerCase().replace(/\s+/g, "_")), /* @__PURE__ */ import_react9.default.createElement(FiMoreHorizontal, { style: { color: "#fff" } })), displayMedia && /* @__PURE__ */ import_react9.default.createElement("div", { style: { borderRadius: "10px", overflow: "hidden", marginBottom: "10px", height: "280px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: displayMedia, alt: "Post asset", style: { width: "100%", height: "100%", objectFit: "cover" } })), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: "8px", fontSize: "1.2rem" } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "14px" } }, /* @__PURE__ */ import_react9.default.createElement(FiHeart, { style: { color: "#e1306c" } }), /* @__PURE__ */ import_react9.default.createElement(FiMessageSquare, null), /* @__PURE__ */ import_react9.default.createElement(FiSend, null))), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.82rem", fontWeight: "700", marginBottom: "4px" } }, "12,840 likes"), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.82rem", lineHeight: "1.4", color: "#f1f5f9" } }, /* @__PURE__ */ import_react9.default.createElement("strong", null, profileName.toLowerCase().replace(/\s+/g, "_")), " ", displayCaption)), selectedPlatform === "twitter" && /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "12px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: profilePic, alt: "User", style: { width: "42px", height: "42px", borderRadius: "50%" } }), /* @__PURE__ */ import_react9.default.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "6px", alignItems: "center", fontSize: "0.88rem" } }, /* @__PURE__ */ import_react9.default.createElement("strong", { style: { color: "#fff" } }, profileName), /* @__PURE__ */ import_react9.default.createElement("span", { style: { color: "#64748b" } }, "@", profileName.toLowerCase().replace(/\s+/g, ""), " \u2022 1m")), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.88rem", lineHeight: "1.4", color: "#e2e8f0", marginTop: "6px" } }, displayCaption), displayMedia && /* @__PURE__ */ import_react9.default.createElement("div", { style: { borderRadius: "12px", overflow: "hidden", marginTop: "10px", maxHeight: "260px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: displayMedia, alt: "Post asset", style: { width: "100%", height: "100%", objectFit: "cover" } })), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", color: "#64748b", fontSize: "0.8rem", marginTop: "12px" } }, /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F4AC} 412"), /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F501} 1,840"), /* @__PURE__ */ import_react9.default.createElement("span", null, "\u2764\uFE0F 9,250"), /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F4CA} 84.5K"))))), selectedPlatform === "youtube" && /* @__PURE__ */ import_react9.default.createElement("div", null, displayMedia && /* @__PURE__ */ import_react9.default.createElement("div", { style: { borderRadius: "12px", overflow: "hidden", height: "220px", marginBottom: "10px", position: "relative" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: displayMedia, alt: "Video thumbnail", style: { width: "100%", height: "100%", objectFit: "cover" } }), /* @__PURE__ */ import_react9.default.createElement("div", { style: { position: "absolute", bottom: "10px", right: "10px", background: "rgba(0,0,0,0.8)", color: "#fff", fontSize: "0.75rem", padding: "2px 6px", borderRadius: "4px" } }, "12:45")), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: profilePic, alt: "User", style: { width: "36px", height: "36px", borderRadius: "50%" } }), /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("h4", { style: { margin: 0, fontSize: "0.9rem", color: "#fff" } }, displayCaption.slice(0, 70), "..."), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.75rem", color: "#94a3b8", marginTop: "4px" } }, profileName, " \u2022 48K views \u2022 2 hours ago")))))));
+    } }, deviceMode === "mobile" && /* @__PURE__ */ import_react9.default.createElement("div", { style: { width: "120px", height: "14px", background: "#2a2e3d", borderRadius: "0 0 10px 10px", margin: "-20px auto 16px auto" } }), selectedPlatform === "linkedin" && /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "12px", alignItems: "center", marginBottom: "12px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: profilePic, alt: "User", style: { width: "46px", height: "46px", borderRadius: "50%" } }), /* @__PURE__ */ import_react9.default.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.9rem", fontWeight: "700", color: "#fff", display: "flex", alignItems: "center", gap: "6px" } }, profileName, " ", /* @__PURE__ */ import_react9.default.createElement("span", { style: { fontSize: "0.72rem", color: "#94a3b8" } }, "\u2022 1st")), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.75rem", color: "#94a3b8" } }, "Enterprise Growth Specialist @ SocialPilot"), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.72rem", color: "#64748b", display: "flex", alignItems: "center", gap: "4px" } }, "Just now \u2022 ", /* @__PURE__ */ import_react9.default.createElement(FiGlobe, { size: 11 }))), /* @__PURE__ */ import_react9.default.createElement(FiMoreHorizontal, { style: { color: "#94a3b8" } })), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.88rem", lineHeight: "1.5", color: "#e2e8f0", marginBottom: "12px", whiteSpace: "pre-wrap" } }, displayCaption), displayMedia && /* @__PURE__ */ import_react9.default.createElement("div", { style: { borderRadius: "8px", overflow: "hidden", marginBottom: "12px", maxHeight: "340px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: displayMedia, alt: "Post asset", style: { width: "100%", height: "100%", objectFit: "cover" } })), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", fontSize: "0.74rem", color: "#94a3b8", borderBottom: "1px solid #334155", paddingBottom: "8px", marginBottom: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F44D} ", activeDemo.likes, " \u2022 ", activeDemo.comments, " comments"), /* @__PURE__ */ import_react9.default.createElement("span", null, activeDemo.shares, " shares")), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", justifyContent: "space-around", color: "#94a3b8", fontSize: "0.82rem", fontWeight: "600" } }, /* @__PURE__ */ import_react9.default.createElement("span", { style: { display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" } }, /* @__PURE__ */ import_react9.default.createElement(FiThumbsUp, null), " Like"), /* @__PURE__ */ import_react9.default.createElement("span", { style: { display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" } }, /* @__PURE__ */ import_react9.default.createElement(FiMessageSquare, null), " Comment"), /* @__PURE__ */ import_react9.default.createElement("span", { style: { display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" } }, /* @__PURE__ */ import_react9.default.createElement(FiShare2, null), " Repost"), /* @__PURE__ */ import_react9.default.createElement("span", { style: { display: "flex", alignItems: "center", gap: "6px", cursor: "pointer" } }, /* @__PURE__ */ import_react9.default.createElement(FiSend, null), " Send"))), selectedPlatform === "facebook" && /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "12px", alignItems: "center", marginBottom: "12px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: profilePic, alt: "User", style: { width: "42px", height: "42px", borderRadius: "50%" } }), /* @__PURE__ */ import_react9.default.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.9rem", fontWeight: "700", color: "#fff" } }, profileName), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.74rem", color: "#94a3b8", display: "flex", alignItems: "center", gap: "4px" } }, "Just now \u2022 \u{1F310} Facebook Page"))), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.88rem", lineHeight: "1.5", color: "#e2e8f0", marginBottom: "12px" } }, displayCaption), displayMedia && /* @__PURE__ */ import_react9.default.createElement("div", { style: { borderRadius: "8px", overflow: "hidden", marginBottom: "12px", maxHeight: "340px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: displayMedia, alt: "Post asset", style: { width: "100%", height: "100%", objectFit: "cover" } })), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", justifyContent: "space-around", color: "#94a3b8", fontSize: "0.82rem", borderTop: "1px solid #334155", paddingTop: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F44D} Like (", activeDemo.likes, ")"), /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F4AC} Comment (", activeDemo.comments, ")"), /* @__PURE__ */ import_react9.default.createElement("span", null, "\u2197\uFE0F Share (", activeDemo.shares, ")"))), selectedPlatform === "instagram" && /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "10px", alignItems: "center", marginBottom: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: profilePic, alt: "User", style: { width: "36px", height: "36px", borderRadius: "50%", border: "2px solid #e1306c" } }), /* @__PURE__ */ import_react9.default.createElement("strong", { style: { fontSize: "0.88rem", color: "#fff", flex: 1 } }, profileName.toLowerCase().replace(/\s+/g, "_")), /* @__PURE__ */ import_react9.default.createElement(FiMoreHorizontal, { style: { color: "#fff" } })), displayMedia && /* @__PURE__ */ import_react9.default.createElement("div", { style: { borderRadius: "10px", overflow: "hidden", marginBottom: "10px", height: "280px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: displayMedia, alt: "Post asset", style: { width: "100%", height: "100%", objectFit: "cover" } })), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", marginBottom: "8px", fontSize: "1.2rem" } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "14px" } }, /* @__PURE__ */ import_react9.default.createElement(FiHeart, { style: { color: "#e1306c" } }), /* @__PURE__ */ import_react9.default.createElement(FiMessageSquare, null), /* @__PURE__ */ import_react9.default.createElement(FiSend, null))), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.82rem", fontWeight: "700", marginBottom: "4px" } }, activeDemo.likes, " likes"), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.82rem", lineHeight: "1.4", color: "#f1f5f9" } }, /* @__PURE__ */ import_react9.default.createElement("strong", null, profileName.toLowerCase().replace(/\s+/g, "_")), " ", displayCaption)), selectedPlatform === "twitter" && /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "12px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: profilePic, alt: "User", style: { width: "42px", height: "42px", borderRadius: "50%" } }), /* @__PURE__ */ import_react9.default.createElement("div", { style: { flex: 1 } }, /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "6px", alignItems: "center", fontSize: "0.88rem" } }, /* @__PURE__ */ import_react9.default.createElement("strong", { style: { color: "#fff" } }, profileName), /* @__PURE__ */ import_react9.default.createElement("span", { style: { color: "#64748b" } }, "@", profileName.toLowerCase().replace(/\s+/g, ""), " \u2022 1m")), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.88rem", lineHeight: "1.4", color: "#e2e8f0", marginTop: "6px" } }, displayCaption), displayMedia && /* @__PURE__ */ import_react9.default.createElement("div", { style: { borderRadius: "12px", overflow: "hidden", marginTop: "10px", maxHeight: "260px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: displayMedia, alt: "Post asset", style: { width: "100%", height: "100%", objectFit: "cover" } })), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", justifyContent: "space-between", color: "#64748b", fontSize: "0.8rem", marginTop: "12px" } }, /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F4AC} ", activeDemo.comments), /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F501} ", activeDemo.shares), /* @__PURE__ */ import_react9.default.createElement("span", null, "\u2764\uFE0F ", activeDemo.likes), /* @__PURE__ */ import_react9.default.createElement("span", null, "\u{1F4CA} ", activeDemo.views))))), selectedPlatform === "youtube" && /* @__PURE__ */ import_react9.default.createElement("div", null, displayMedia && /* @__PURE__ */ import_react9.default.createElement("div", { style: { borderRadius: "12px", overflow: "hidden", height: "220px", marginBottom: "10px", position: "relative" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: displayMedia, alt: "Video thumbnail", style: { width: "100%", height: "100%", objectFit: "cover" } }), /* @__PURE__ */ import_react9.default.createElement("div", { style: { position: "absolute", bottom: "10px", right: "10px", background: "rgba(0,0,0,0.8)", color: "#fff", fontSize: "0.75rem", padding: "2px 6px", borderRadius: "4px" } }, "12:45")), /* @__PURE__ */ import_react9.default.createElement("div", { style: { display: "flex", gap: "10px" } }, /* @__PURE__ */ import_react9.default.createElement("img", { src: profilePic, alt: "User", style: { width: "36px", height: "36px", borderRadius: "50%" } }), /* @__PURE__ */ import_react9.default.createElement("div", null, /* @__PURE__ */ import_react9.default.createElement("h4", { style: { margin: 0, fontSize: "0.9rem", color: "#fff" } }, displayCaption.slice(0, 70), "..."), /* @__PURE__ */ import_react9.default.createElement("div", { style: { fontSize: "0.75rem", color: "#94a3b8", marginTop: "4px" } }, profileName, " \u2022 ", activeDemo.views, " views \u2022 2 hours ago")))))));
   };
   var DevicePreviewModal_default = DevicePreviewModal;
 
