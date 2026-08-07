@@ -276,14 +276,53 @@ const Dashboard = () => {
   const renderRoleDashboard = () => {
     const metrics = dashboardMetrics || {};
 
-    // 1. ADMINISTRATOR COMMAND CENTER DASHBOARD
+    // 1. ADMINISTRATOR COMMAND CENTER DASHBOARD (COVERS ALL 4 PROJECT ROLES)
     if (dashboardRoleView === 'admin' || user?.role?.name === 'Administrator' && dashboardRoleView !== 'creator' && dashboardRoleView !== 'marketing') {
+      const roleWorkflows = [
+        {
+          role: "Administrator 🛡️",
+          iconColor: "#ef4444",
+          badgeBg: "rgba(239, 68, 68, 0.18)",
+          userCount: "12 Users",
+          workDescription: "System Governance, RBAC Role Permissions, OAuth Security, API Driver Latency Monitor, Global Quotas & Audit Logs.",
+          scope: "Full System Privilege",
+          primaryMetric: "99.98% System Uptime"
+        },
+        {
+          role: "Business User 🏢",
+          iconColor: "#3b82f6",
+          badgeBg: "rgba(59, 130, 246, 0.18)",
+          userCount: "24 Users",
+          workDescription: "Executive ROI Analytics, Financial Budget Allocation ($35,500), Campaign Conversion Funnels & Client Account Oversight.",
+          scope: "Executive Financial Scope",
+          primaryMetric: "$35,500 Budget Managed"
+        },
+        {
+          role: "Marketing Specialist 📣",
+          iconColor: "#f59e0b",
+          badgeBg: "rgba(245, 158, 11, 0.18)",
+          userCount: "46 Users",
+          workDescription: "Multi-Channel Marketing Strategy, Audience Demographics, Cross-Platform Campaign Dispatches & Approval Workflows.",
+          scope: "Campaign Strategy Scope",
+          primaryMetric: "4 Active Campaigns"
+        },
+        {
+          role: "Content Creator ✍️",
+          iconColor: "#10b981",
+          badgeBg: "rgba(16, 185, 129, 0.18)",
+          userCount: "46 Users",
+          workDescription: "Post Copywriting, High-Res Media Asset Uploads, Post Scheduling, Visual Calendar Dispatches & Live Device Previews.",
+          scope: "Content Creation Scope",
+          primaryMetric: "28 Submitted Posts"
+        }
+      ];
+
       const adminUsers = [
-        { id: "u1", name: "Keerthana M", email: "admin@socialpilot.com", role: "Administrator", team: "Enterprise Growth Team", status: "Active", last_login: "Just now" },
-        { id: "u2", name: "Alex Morgan", email: "creator@socialpilot.com", role: "Content Creator", team: "Marketing & Media", status: "Active", last_login: "10 mins ago" },
-        { id: "u3", name: "Sarah Connor", email: "sarah@acme.com", role: "Marketing Specialist", team: "Acme Digital Agency", status: "Active", last_login: "1 hour ago" },
-        { id: "u4", name: "David Miller", email: "david@enterprise.com", role: "Business User", team: "Global Ops", status: "Active", last_login: "3 hours ago" },
-        { id: "u5", name: "Emily Watson", email: "emily@brand.com", role: "Content Creator", team: "Creative Studio", status: "Inactive", last_login: "2 days ago" }
+        { id: "u1", name: "Keerthana M", email: "admin@socialpilot.com", role: "Administrator", work: "System Security & User RBAC Governance", team: "Enterprise Growth Team", scope: "Full Governance", status: "Active", last_login: "Just now" },
+        { id: "u2", name: "David Miller", email: "david@enterprise.com", role: "Business User", work: "Financial ROI & Budget Allocation ($15K)", team: "Executive Growth Ops", scope: "Executive Financial", status: "Active", last_login: "20 mins ago" },
+        { id: "u3", name: "Sarah Connor", email: "sarah@acme.com", role: "Marketing Specialist", work: "Q3 Launch Campaign Strategy & Audience Targeting", team: "Acme Digital Agency", scope: "Campaign Dispatches", status: "Active", last_login: "1 hour ago" },
+        { id: "u4", name: "Alex Morgan", email: "creator@socialpilot.com", role: "Content Creator", work: "Copywriting, Media Uploads & Post Scheduling", team: "Creative Media Studio", scope: "Create & Schedule", status: "Active", last_login: "10 mins ago" },
+        { id: "u5", name: "Emily Watson", email: "emily@brand.com", role: "Content Creator", work: "Visual Monthly Calendar & Instagram Feed Previews", team: "Brand Content Ops", scope: "Create & Schedule", status: "Inactive", last_login: "2 days ago" }
       ];
 
       const apiDrivers = [
@@ -310,25 +349,19 @@ const Dashboard = () => {
             >
               🛡️ Administrator Command Center
             </button>
-            <button 
-              onClick={() => setDashboardRoleView('marketing')} 
-              style={{ padding: '8px 16px', borderRadius: '8px', border: 'none', background: dashboardRoleView === 'marketing' ? 'var(--primary)' : 'transparent', color: dashboardRoleView === 'marketing' ? '#fff' : 'var(--text-secondary)', fontWeight: '600', cursor: 'pointer', fontSize: '0.84rem' }}
-            >
-              📣 Marketing Specialist View
-            </button>
           </div>
 
           {/* Admin Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
             <div>
-              <h2 style={tabTitleStyle}>🛡️ Administrator Workspace Command Center</h2>
+              <h2 style={tabTitleStyle}>🛡️ Administrator Master Command Center</h2>
               <p style={tabDescStyle}>
-                Welcome back, Administrator <strong>{user?.name || user?.full_name}</strong>! System health monitor, user role permissions, API rate limits, and audit logs.
+                Comprehensive System Oversight covering all <strong>4 Project Roles</strong> (Administrator, Business User, Marketing Specialist, Content Creator), user permissions, system health, and publishing analytics.
               </p>
             </div>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               <button className="btn-primary" onClick={() => setActiveTab('team')} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <FiUsers size={15} /> Manage Workspace Users
+                <FiUsers size={15} /> Manage Workspace Roles
               </button>
               <button className="btn-secondary" onClick={() => setActiveTab('settings')} style={{ height: '36px', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <FiSettings size={15} /> System Configurations
@@ -336,96 +369,184 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Admin Summary Cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '14px', marginBottom: '24px' }}>
-            <div style={statCardStyle} className="glass-panel">
-              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                <FiUsers style={{ color: 'var(--primary)' }} /> Registered Users
-              </h4>
-              <p style={statNumberStyle}>128</p>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Across 12 Workspace Teams</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                <FiLayers style={{ color: '#10b981' }} /> Active Workspaces
-              </h4>
-              <p style={statNumberStyle}>12</p>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Enterprise & Agency</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                <FiCheckCircle style={{ color: '#10b981' }} /> System Status
-              </h4>
-              <p style={statNumberStyle}>99.98%</p>
-              <span style={{ fontSize: '0.72rem', color: '#10b981' }}>🟢 All Clusters Healthy</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                <FiActivity style={{ color: '#f59e0b' }} /> API Consumption
-              </h4>
-              <p style={statNumberStyle}>42.1K</p>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>/ 100,000 Daily Requests</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                <FiLink style={{ color: '#8b5cf6' }} /> OAuth Connections
-              </h4>
-              <p style={statNumberStyle}>38</p>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Active Platform Tokens</span>
-            </div>
-            <div style={statCardStyle} className="glass-panel">
-              <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                <FiFileText style={{ color: '#ef4444' }} /> Security Audits
-              </h4>
-              <p style={statNumberStyle}>1,420</p>
-              <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Log Events Ingested</span>
+          {/* WIDGET 1: 4 PROJECT ROLES & WORKFLOW BREAKDOWN */}
+          <div style={{ marginBottom: '28px' }}>
+            <h3 style={{ fontSize: '1.02rem', marginBottom: '14px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              🧩 4 Project Roles & Specific Workflow Architecture
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px' }}>
+              {roleWorkflows.map((rw, idx) => (
+                <div key={idx} style={{ padding: '18px', background: 'rgba(255,255,255,0.02)', border: `1px solid ${rw.iconColor}`, borderRadius: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <strong style={{ fontSize: '0.92rem', color: rw.iconColor }}>{rw.role}</strong>
+                    <span style={{ fontSize: '0.74rem', padding: '3px 8px', borderRadius: '12px', background: rw.badgeBg, color: rw.iconColor, fontWeight: 'bold' }}>
+                      {rw.userCount}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', lineHeight: '1.45', marginBottom: '12px', minHeight: '44px' }}>
+                    {rw.workDescription}
+                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', borderTop: '1px solid rgba(255,255,255,0.05)', paddingTop: '8px' }}>
+                    <span>Scope: {rw.scope}</span>
+                    <strong style={{ color: 'var(--text-primary)' }}>{rw.primaryMetric}</strong>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Admin User Management Table */}
-          <div style={{ marginBottom: '24px' }}>
-            <h3 style={{ fontSize: '1rem', marginBottom: '12px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              👥 Workspace User Directory & Role Assignment
+          {/* WIDGET 2: 12 MASTER SYSTEM SUMMARY CARDS */}
+          <div style={{ marginBottom: '28px' }}>
+            <h3 style={{ fontSize: '1.02rem', marginBottom: '14px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              📊 Cross-Role Workspace Performance & Master Metrics
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px' }}>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiUsers style={{ color: 'var(--primary)' }} /> Registered Users
+                </h4>
+                <p style={statNumberStyle}>128</p>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Across 4 System Roles</span>
+              </div>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiLayers style={{ color: '#10b981' }} /> Active Workspaces
+                </h4>
+                <p style={statNumberStyle}>12</p>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Enterprise & Agency</span>
+              </div>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiCheckCircle style={{ color: '#10b981' }} /> System Health
+                </h4>
+                <p style={statNumberStyle}>99.98%</p>
+                <span style={{ fontSize: '0.72rem', color: '#10b981' }}>🟢 All Systems Normal</span>
+              </div>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiBarChart2 style={{ color: '#3b82f6' }} /> Active Campaigns
+                </h4>
+                <p style={statNumberStyle}>4</p>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Marketing & Business</span>
+              </div>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiActivity style={{ color: '#f59e0b' }} /> Budget Managed
+                </h4>
+                <p style={statNumberStyle}>$35.5K</p>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Allocated Campaign ROI</span>
+              </div>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiSend style={{ color: 'var(--primary)' }} /> Total Submitted
+                </h4>
+                <p style={statNumberStyle}>{metrics.total_submitted_posts || 28}</p>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Creator Submissions</span>
+              </div>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiClock style={{ color: '#f59e0b' }} /> Scheduled Posts
+                </h4>
+                <p style={statNumberStyle}>{metrics.scheduled_posts_count || 8}</p>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Queued in Calendar</span>
+              </div>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiCheckCircle style={{ color: '#10b981' }} /> Published Posts
+                </h4>
+                <p style={statNumberStyle}>{metrics.published_posts_count || 15}</p>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Live Across Channels</span>
+              </div>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiFileText style={{ color: '#8b5cf6' }} /> Draft Posts
+                </h4>
+                <p style={statNumberStyle}>{metrics.draft_posts_count || 4}</p>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>In Creator Drafts</span>
+              </div>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiThumbsUp style={{ color: '#3b82f6' }} /> Likes Received
+                </h4>
+                <p style={statNumberStyle}>{(metrics.total_likes || 42100).toLocaleString()}</p>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Audience Reaction</span>
+              </div>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiMessageSquare style={{ color: '#8b5cf6' }} /> Comments
+                </h4>
+                <p style={statNumberStyle}>{(metrics.total_comments || 5850).toLocaleString()}</p>
+                <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>Community Feedback</span>
+              </div>
+              <div style={statCardStyle} className="glass-panel">
+                <h4 style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                  <FiTrendingUp style={{ color: '#10b981' }} /> Engagement Rate
+                </h4>
+                <p style={statNumberStyle}>{metrics.engagement_rate || '8.42%'}</p>
+                <span style={{ fontSize: '0.72rem', color: '#10b981' }}>+1.8% vs Last Month</span>
+              </div>
+            </div>
+          </div>
+
+          {/* WIDGET 3: 4-ROLE USER DIRECTORY & WORK RESPONSIBILITY TABLE */}
+          <div style={{ marginBottom: '28px' }}>
+            <h3 style={{ fontSize: '1.02rem', marginBottom: '14px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              👥 User Directory, Assigned Roles & Specific Work Responsibilities
             </h3>
             <div style={{ overflowX: 'auto', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem', textAlign: 'left' }}>
                 <thead>
                   <tr style={{ background: 'rgba(255,255,255,0.04)', borderBottom: '1px solid var(--border-color)', color: 'var(--text-muted)' }}>
-                    <th style={{ padding: '12px 16px' }}>User</th>
-                    <th style={{ padding: '12px 16px' }}>Email</th>
-                    <th style={{ padding: '12px 16px' }}>Role</th>
-                    <th style={{ padding: '12px 16px' }}>Team Workspace</th>
+                    <th style={{ padding: '12px 16px' }}>User & Email</th>
+                    <th style={{ padding: '12px 16px' }}>System Role</th>
+                    <th style={{ padding: '12px 16px' }}>Specific Work & Responsibilities</th>
+                    <th style={{ padding: '12px 16px' }}>Workspace Team</th>
+                    <th style={{ padding: '12px 16px' }}>Access Scope</th>
                     <th style={{ padding: '12px 16px' }}>Status</th>
-                    <th style={{ padding: '12px 16px' }}>Last Activity</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {adminUsers.map(u => (
-                    <tr key={u.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
-                      <td style={{ padding: '12px 16px', fontWeight: '600', color: 'var(--text-primary)' }}>{u.name}</td>
-                      <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{u.email}</td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <span style={{ padding: '3px 8px', borderRadius: '12px', fontSize: '0.74rem', background: u.role === 'Administrator' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(99, 102, 241, 0.2)', color: u.role === 'Administrator' ? '#ef4444' : 'var(--primary)', fontWeight: 'bold' }}>
-                          {u.role}
-                        </span>
-                      </td>
-                      <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{u.team}</td>
-                      <td style={{ padding: '12px 16px' }}>
-                        <span style={{ color: u.status === 'Active' ? '#10b981' : '#94a3b8', fontWeight: 'bold' }}>
-                          ● {u.status}
-                        </span>
-                      </td>
-                      <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{u.last_login}</td>
-                    </tr>
-                  ))}
+                  {adminUsers.map(u => {
+                    let roleColor = 'var(--primary)';
+                    if (u.role === 'Administrator') roleColor = '#ef4444';
+                    else if (u.role === 'Business User') roleColor = '#3b82f6';
+                    else if (u.role === 'Marketing Specialist') roleColor = '#f59e0b';
+                    else if (u.role === 'Content Creator') roleColor = '#10b981';
+
+                    return (
+                      <tr key={u.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                        <td style={{ padding: '12px 16px' }}>
+                          <strong style={{ display: 'block', color: 'var(--text-primary)' }}>{u.name}</strong>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{u.email}</span>
+                        </td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <span style={{ padding: '4px 10px', borderRadius: '12px', fontSize: '0.74rem', background: `${roleColor}22`, color: roleColor, fontWeight: 'bold', border: `1px solid ${roleColor}44` }}>
+                            {u.role}
+                          </span>
+                        </td>
+                        <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', maxWidth: '280px', lineHeight: '1.4' }}>
+                          {u.work}
+                        </td>
+                        <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{u.team}</td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>{u.scope}</span>
+                        </td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <span style={{ color: u.status === 'Active' ? '#10b981' : '#94a3b8', fontWeight: 'bold' }}>
+                            ● {u.status}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
           </div>
 
-          {/* Social Media API Drivers Status Table */}
+          {/* WIDGET 4: SOCIAL MEDIA API PROVIDER DRIVERS LATENCY MONITOR */}
           <div>
-            <h3 style={{ fontSize: '1rem', marginBottom: '12px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h3 style={{ fontSize: '1.02rem', marginBottom: '14px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px' }}>
               🔌 Social Media Provider Drivers & API Latency Monitor
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '12px' }}>
