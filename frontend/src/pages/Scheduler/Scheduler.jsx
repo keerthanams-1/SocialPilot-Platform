@@ -54,6 +54,7 @@ const Scheduler = ({ initialTab }) => {
   const [modalScheduleTime, setModalScheduleTime] = useState('');
   const [modalMediaUrl, setModalMediaUrl] = useState('');
   const [modalSubmitting, setModalSubmitting] = useState(false);
+  const [modalError, setModalError] = useState('');
 
   // General message alerts
   const [error, setError] = useState('');
@@ -162,6 +163,7 @@ const Scheduler = ({ initialTab }) => {
     setModalScheduleTime(isoTime);
     setModalContent('');
     setModalMediaUrl('');
+    setModalError('');
     const defaultChs = channels.length > 0 ? channels.map(c => c.id || c.platform) : ['facebook', 'instagram', 'linkedin', 'twitter'];
     setModalSelectedChannels(defaultChs);
     setIsCalendarModalOpen(true);
@@ -169,10 +171,18 @@ const Scheduler = ({ initialTab }) => {
 
   const handleModalSavePost = async (e) => {
     e.preventDefault();
+    setModalError('');
     if (!modalContent.trim()) {
-      setError('Please enter post content caption.');
+      setModalError('Please enter post content caption.');
       return;
     }
+    
+    // Auto-resolve active workspace team ID
+    const activeTeamId = teamId || localStorage.getItem('socialpilot_active_team_id') || 'team_enterprise_workspace_default';
+    if (!teamId) {
+      setTeamId(activeTeamId);
+    }
+
     const targetChannels = modalSelectedChannels.length > 0 
       ? modalSelectedChannels 
       : (channels.length > 0 ? channels.map(c => c.id || c.platform) : ['facebook', 'instagram', 'linkedin', 'twitter']);
@@ -180,22 +190,48 @@ const Scheduler = ({ initialTab }) => {
     setModalSubmitting(true);
     setError('');
     setSuccess('');
+    
     try {
+      const scheduledIsoDate = new Date(modalScheduleTime).toISOString();
       const payload = {
-        team_id: teamId,
+        team_id: activeTeamId,
         content_text: modalContent.trim(),
         media_urls: modalMediaUrl.trim() ? [modalMediaUrl.trim()] : [],
         platform_targets: targetChannels,
         schedule_type: 'scheduled',
-        scheduled_at: new Date(modalScheduleTime).toISOString()
+        scheduled_at: scheduledIsoDate
       };
-      await api.post('/posts', payload);
-      setSuccess(`Post scheduled for ${new Date(modalScheduleTime).toLocaleDateString()} successfully!`);
+      
+      const response = await api.post('/posts', payload);
+      const createdPost = response.data?.data || response.data || {
+        id: `post_${Date.now()}`,
+        team_id: activeTeamId,
+        content_text: modalContent.trim(),
+        media_urls: modalMediaUrl.trim() ? [modalMediaUrl.trim()] : [],
+        platform_targets: targetChannels,
+        schedule_type: 'scheduled',
+        scheduled_at: scheduledIsoDate,
+        status: 'scheduled'
+      };
+
+      // 1. Immediately append post into local state for instant calendar rendering
+      setPosts(prev => [createdPost, ...prev]);
+
+      // 2. Show prominent success banner
+      setSuccess(`Post scheduled for ${new Date(modalScheduleTime).toLocaleDateString()} at ${new Date(modalScheduleTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} successfully!`);
+
+      // 3. Close modal & reset fields
       setIsCalendarModalOpen(false);
-      loadPosts(teamId);
+      setModalContent('');
+      setModalMediaUrl('');
+
+      // 4. Reload from backend DB
+      loadPosts(activeTeamId);
     } catch (err) {
       console.error('Failed to schedule post from calendar modal', err);
-      setError(err.response?.data?.detail || 'Failed to schedule post.');
+      const errMsg = err.response?.data?.detail || err.response?.data?.message || 'Failed to schedule post. Please verify all inputs.';
+      setModalError(errMsg);
+      setError(errMsg);
     } finally {
       setModalSubmitting(false);
     }
@@ -1183,6 +1219,12 @@ const Scheduler = ({ initialTab }) => {
             </div>
 
             <form onSubmit={handleModalSavePost} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {modalError && (
+                <div style={{ padding: '10px 14px', background: 'rgba(239, 68, 68, 0.15)', border: '1px solid var(--error)', borderRadius: '8px', color: 'var(--error)', fontSize: '0.84rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <FiAlertCircle size={16} />
+                  <span>{modalError}</span>
+                </div>
+              )}
               <div style={formGroupStyle}>
                 <label style={labelStyle}>Content Caption</label>
                 <textarea
